@@ -1,9 +1,12 @@
-import { Outlet } from "react-router-dom";
+﻿import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import { useTheme } from "../hooks/useTheme";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Layout() {
+  // Enforce auth on protected routes
+  useAuth();
   const { theme, setTheme } = useTheme();
 
   return (
@@ -20,7 +23,7 @@ export default function Layout() {
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="text-poopay-text text-lg"
         >
-          {theme === "dark" ? "☀️" : "🌙"}
+          {theme === "dark" ? "🌙" : "☀️"}
         </button>
       </div>
     </div>

@@ -44,5 +44,9 @@ export const Auth = {
   register: (payload) => api("/signup", { method: "POST", body: payload }),
 
   logout: () => api("/logout", { method: "POST" }),
-  me: () => api("/me"),
+  me: (token) =>
+    api("/me", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    }),
 };
