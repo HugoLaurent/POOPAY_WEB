@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { DayPills } from "../components/DayPills";
 
 // utilitaires courts
 const fmtH = (h) => `${h.toFixed(1)}h`;
@@ -43,36 +44,6 @@ function StatRow({ title, sessions, earned, hours }) {
   );
 }
 
-// pastilles de jours (ex : mer → mar)
-function DayPills({ activeIndex = 6 }) {
-  const days = useMemo(() => {
-    const labels = ["Mer", "Jeu", "Ven", "Sam", "Dim", "Lun", "Mar"];
-    const dates = ["24", "25", "26", "27", "28", "29", "30"];
-    return labels.map((l, i) => ({ label: l, date: dates[i] }));
-  }, []);
-  return (
-    <div className="flex items-center gap-3 overflow-x-auto px-2 pb-1 pt-2">
-      {days.map((d, i) => {
-        const active = i === activeIndex;
-        return (
-          <button
-            key={d.date}
-            className={[
-              "flex flex-col items-center justify-center shrink-0 w-12 h-12 rounded-full",
-              active
-                ? "bg-poopay-active text-white shadow-soft"
-                : "bg-poopay-pill text-poopay-text/70",
-            ].join(" ")}
-          >
-            <span className="text-[11px] leading-none">{d.label}</span>
-            <span className="mt-0.5 font-semibold">{d.date}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 // item classement
 function RankItem({ left, right, medal }) {
   const medalEmoji = { 1: "🥇", 2: "🥈", 3: "🥉" }[medal] ?? "🏅";
@@ -103,11 +74,12 @@ export default function Home() {
     { left: "—", right: "Geo_Parker9", medal: 2 },
     { left: "—", right: "Davonte.Reynolds", medal: 3 },
   ];
+  const [activeIndex, setActiveIndex] = useState(6);
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-poopay-bg pb-24">
       {/* strip de jours */}
-      <DayPills />
+      <DayPills activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
 
       {/* blocs stats */}
       <div className="mt-4">
