@@ -1,1 +1,121 @@
+/* Tailwind v4 */
 @import "tailwindcss";
+
+/* ================================
+   🎨 Thème Poopay — tokens (clair)
+   ================================= */
+@theme {
+  /* Couleurs sémantiques */
+  --color-poopay-bg: #ede4da; /* fond sable */
+  --color-poopay-card: #f5eee6; /* cartes */
+  --color-poopay-text: #7b3f1d; /* titres/brun */
+  --color-poopay-mute: #c9b6a6; /* texte secondaire */
+  --color-poopay-pill: #d7c4b6; /* pastilles inactives */
+  --color-poopay-active: #c79e7a; /* pastille active / accent */
+
+  /* Rayons / Ombres */
+  --radius-xl2: 1.25rem;
+  --radius-3xl: 1.75rem;
+  --shadow-soft: 0 6px 20px rgba(124, 84, 56, 0.08);
+}
+
+/* ==========================================
+   🌙 Variante sombre — AUTOMATIQUE (OS)
+   ========================================== */
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-poopay-bg: #1e1b18;
+    --color-poopay-card: #2a2622;
+    --color-poopay-text: #f3e7dd;
+    --color-poopay-mute: #9b8f84;
+    --color-poopay-pill: #3b332e;
+    --color-poopay-active: #c79e7a;
+    --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* =====================================================
+   🌓 Overrides MANUELS (priment sur l’automatique)
+   Ajoute class="dark" OU class="light" sur <html> (reco)
+   ou sur <body>. La classe l’emporte sur l’auto.
+   ===================================================== */
+@layer base {
+  .dark {
+    --color-poopay-bg: #1e1b18;
+    --color-poopay-card: #2a2622;
+    --color-poopay-text: #f3e7dd;
+    --color-poopay-mute: #9b8f84;
+    --color-poopay-pill: #3b332e;
+    --color-poopay-active: #c79e7a;
+    --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+  .light {
+    --color-poopay-bg: #ede4da;
+    --color-poopay-card: #f5eee6;
+    --color-poopay-text: #7b3f1d;
+    --color-poopay-mute: #c9b6a6;
+    --color-poopay-pill: #d7c4b6;
+    --color-poopay-active: #c79e7a;
+    --shadow-soft: 0 6px 20px rgba(124, 84, 56, 0.08);
+  }
+}
+
+/* =========================
+   🧱 Styles de base globaux
+   ========================= */
+@layer base {
+  /* Fond + couleur texte + transition douce */
+  body {
+    @apply bg-poopay-bg text-poopay-text/90 transition-colors duration-300;
+  }
+
+  /* Liens sobres */
+  a {
+    @apply text-poopay-text/90;
+  }
+  a:hover {
+    @apply opacity-80;
+  }
+
+  /* Focus visible et accessible */
+  :focus-visible {
+    @apply outline-none ring-4 ring-poopay-active/30;
+  }
+
+  /* Sélection de texte */
+  ::selection {
+    background: color-mix(
+      in oklab,
+      var(--color-poopay-active) 40%,
+      transparent
+    );
+  }
+
+  /* Scrollbar discrète (navigateurs WebKit) */
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-poopay-text) 25%, transparent);
+    border-radius: 9999px;
+  }
+}
+
+/* =========================
+   🧩 Raccourcis utilitaires
+   ========================= */
+@layer utilities {
+  .card-poopay {
+    @apply bg-poopay-card rounded-3xl shadow-soft;
+  }
+  .pill {
+    @apply rounded-full bg-poopay-pill text-poopay-text/70;
+  }
+  .accent {
+    @apply text-poopay-active;
+  }
+}
