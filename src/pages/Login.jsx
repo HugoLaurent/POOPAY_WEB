@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Hourglass } from "lucide-react";
+import { Auth } from "../api/api";
 import logo from "../assets/logo/logoPoopay.png";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,10 +18,17 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
     setErr("");
-    if (!canSubmit) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1000)); // simulation
-    setLoading(false);
+    try {
+      const data = await Auth.login(email, pwd); // <= ici "data" = payload.data
+      if (data?.token) localStorage.setItem("access_token", data.token);
+      if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/");
+    } catch (e) {
+      setErr(e.message || "Erreur de connexion");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

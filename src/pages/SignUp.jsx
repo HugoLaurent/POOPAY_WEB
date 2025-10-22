@@ -1,12 +1,16 @@
 // src/pages/SignUp.jsx
 import { useEffect, useMemo, useState } from "react";
 import { Eye, EyeOff, Hourglass } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Auth } from "../api/api";
+
 import logo from "../assets/logo/logoPoopay.png";
 
 import departements from "../assets/data/departement.json";
 import categories from "../assets/data/category.json";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState("");
@@ -153,27 +157,33 @@ export default function SignUp() {
     else window.history.back();
   };
 
+  function buildSignupPayload(d) {
+    return {
+      email: d.email,
+      username: d.username,
+      password: d.password,
+      password_confirmation: d.confirmPassword, // pour .confirmed()
+
+      departmentCode: d.departmentCode,
+      categoryId: Number(d.categoryId),
+      monthlySalary: Number(String(d.monthlySalary).replace(",", ".")),
+      monthlyHours: Number(String(d.monthlyHours).replace(",", ".")),
+      acceptedTerms: Boolean(d.acceptedTerms),
+      acceptedHealth: Boolean(d.acceptedHealth),
+      theme: d.theme === "dark" ? "dark" : "light",
+    };
+  }
+
   async function handleSubmit() {
     setErr("");
     setIsLoading(true);
     try {
-      // ➜ Branche ici ton appel API d’inscription
-      // Exemple:
-      // const res = await fetch("/api/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({...}) });
-      // const json = await res.json();
-      // if (!json.success) throw new Error(json.message || "Inscription impossible.");
+      const payload = buildSignupPayload(data);
+      await Auth.register(payload);
 
-      await new Promise((r) => setTimeout(r, 1000)); // simulation
-
-      // Redirige vers l’app / tableau de bord :
-      // window.location.href = "/app";
-      alert("Bienvenue 🎉 Ton compte a été créé avec succès !");
+      navigate("/login");
     } catch (e) {
-      console.error(e);
-      setErr(
-        e?.message ||
-          "Une erreur inattendue est survenue. Vérifie ta connexion et réessaie."
-      );
+      setErr(e?.message || "Inscription impossible.");
     } finally {
       setIsLoading(false);
     }
