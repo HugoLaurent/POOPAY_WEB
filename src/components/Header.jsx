@@ -1,7 +1,12 @@
 export default function Header() {
   return (
-    <header className="bg-blue-600 text-white py-4 shadow-md">
-      <nav className="container mx-auto flex justify-between items-center px-4"></nav>
+    <header className="pt-6 pb-2 text-center">
+      <h1 className="text-3xl font-extrabold tracking-tight text-poopay-text">
+        POOPAY
+      </h1>
+      <p className="mt-1 text-poopay-text/80">
+        Combien tu gagnes aux toilettes au travail ?
+      </p>
     </header>
   );
 }
