@@ -141,24 +141,6 @@ export default function Home() {
         ))}
       </section>
 
-      {/* barre d'onglets (fixe en bas) */}
-      <nav className="fixed inset-x-0 bottom-0 h-16 bg-poopay-card/95 backdrop-blur supports-[backdrop-filter]:bg-poopay-card/80 shadow-[0_-6px_20px_rgba(124,84,56,.08)]">
-        <ul className="h-full grid grid-cols-3 text-center text-poopay-text/80">
-          <li className="flex flex-col items-center justify-center">
-            <span className="text-xl">🏠</span>
-            <span className="text-[12px]">Accueil</span>
-          </li>
-          <li className="flex flex-col items-center justify-center opacity-80">
-            <span className="text-xl">⏱️</span>
-            <span className="text-[12px]">Fonctionnalités</span>
-          </li>
-          <li className="flex flex-col items-center justify-center opacity-80">
-            <span className="text-xl">👥</span>
-            <span className="text-[12px]">Groupe</span>
-          </li>
-        </ul>
-      </nav>
-
       {/* mini footer conformité (facultatif) */}
       <div className="text-center text-[12px] text-poopay-mute mt-6">
         <Link to="/privacy" className="underline">
