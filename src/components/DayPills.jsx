@@ -1,12 +1,18 @@
 import { useMemo } from "react";
 export function DayPills({ activeIndex, setActiveIndex }) {
+  const today = new Date();
   const days = useMemo(() => {
-    const labels = ["Mer", "Jeu", "Ven", "Sam", "Dim", "Lun", "Mar"];
-    const dates = ["24", "25", "26", "27", "28", "29", "30"];
+    const labels = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+    const dates = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - ((today.getDay() + 6) % 7) + i);
+      dates.push(d.getDate());
+    }
     return labels.map((l, i) => ({ label: l, date: dates[i] }));
   }, []);
   return (
-    <div className="flex justify-around items-center gap-3  px-2 pb-1 pt-2">
+    <div className="flex justify-around items-center  px-2 pb-1 pt-2">
       {days.map((day, i) => {
         const active = i === activeIndex;
         return (
