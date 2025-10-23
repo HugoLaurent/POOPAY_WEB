@@ -62,6 +62,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
+  // Index du jour actif dans la semaine (0 = Lundi ... 6 = Dimanche)
   const [activeIndex, setActiveIndex] = useState(6);
 
   useEffect(() => {
@@ -81,26 +82,37 @@ export default function Home() {
   }, []);
 
   // 🧮 Calculs dérivés
-  const today = useMemo(() => {
+  // Statistiques du jour sélectionné via DayPills
+  const selectedDay = useMemo(() => {
     if (!data) return { sessions: 0, earned: 0, hours: 0 };
     const now = new Date();
-    const sessionsToday = data.sessions.filter(
-      (s) => new Date(s.startTime).toDateString() === now.toDateString()
+    const monday = new Date(now);
+    // Trouver le lundi de la semaine courante
+    monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    monday.setHours(0, 0, 0, 0);
+
+    const selected = new Date(monday);
+    selected.setDate(monday.getDate() + (Number(activeIndex) || 0));
+    selected.setHours(0, 0, 0, 0);
+
+    const sessionsDay = data.sessions.filter(
+      (s) => new Date(s.startTime).toDateString() === selected.toDateString()
     );
-    const earned = sessionsToday.reduce(
+    const earned = sessionsDay.reduce(
       (sum, s) => sum + Number(s.amountEarned || 0),
       0
     );
-    const seconds = sessionsToday.reduce(
+    const seconds = sessionsDay.reduce(
       (sum, s) => sum + (s.durationSeconds || 0),
       0
     );
     return {
-      sessions: sessionsToday.length,
+      sessions: sessionsDay.length,
       earned,
       hours: seconds / 3600,
+      selectedDate: selected,
     };
-  }, [data]);
+  }, [data, activeIndex]);
 
   const week = useMemo(() => {
     if (!data) return { sessions: 0, earned: 0, hours: 0 };
@@ -172,12 +184,19 @@ export default function Home() {
 
       {/* blocs stats */}
       <div className="mt-4">
-        <StatRow
-          title="Aujourd'hui"
-          sessions={today.sessions}
-          earned={today.earned}
-          hours={today.hours}
-        />
+        {(() => {
+          const labels = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+          const d = selectedDay.selectedDate || new Date();
+          const title = `${labels[activeIndex] || ""} ${d.getDate()}`;
+          return (
+            <StatRow
+              title={title}
+              sessions={selectedDay.sessions}
+              earned={selectedDay.earned}
+              hours={selectedDay.hours}
+            />
+          );
+        })()}
         <StatRow
           title="Cette semaine"
           sessions={week.sessions}
