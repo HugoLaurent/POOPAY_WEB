@@ -6,6 +6,8 @@ import Groupe from "./pages/Groupe";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import "./App.css";
+import Leaderboard from "./pages/Leaderboard";
+import SettingsPage from "./pages/Settings";
 
 function App() {
   return (
@@ -18,9 +20,9 @@ function App() {
       {/* 🔹 TOUTES LES AUTRES DANS LE LAYOUT */}
       <Route element={<AppLayout />}>
         <Route index element={<Home />} />
-        <Route path="leaderboard" element={<p>Leaderboard</p>} />
+        <Route path="leaderboard" element={<Leaderboard />} />
         <Route path="group" element={<Groupe />} />
-        <Route path="settings" element={<p>Settings</p>} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
     </Routes>
   );

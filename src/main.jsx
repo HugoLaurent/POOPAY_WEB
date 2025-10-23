@@ -1,16 +1,13 @@
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.jsx";
-
-// index.tsx
+// src/main.jsx
 import React from "react";
+import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+
+import App from "./App.jsx";
 import "./index.css";
 
-createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    {/* Provider global = le thème s’applique à TOUTES les pages */}
-
     <BrowserRouter>
       <App />
     </BrowserRouter>

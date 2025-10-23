@@ -50,3 +50,19 @@ export const Auth = {
 export const HomeFetch = {
   getStats: () => api("/home", { method: "GET" }),
 };
+
+// src/api/api.js
+export const ClassementFetch = {
+  getStats: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return api(`/rankings${query ? "?" + query : ""}`, { method: "GET" });
+  },
+};
+
+// src/api/api.js
+export const GroupsFetch = {
+  getGroups: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return api(`/groups${query ? "?" + query : ""}`, { method: "GET" });
+  },
+};
