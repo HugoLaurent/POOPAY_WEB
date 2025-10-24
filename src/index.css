@@ -112,4 +112,21 @@ html {
   .accent {
     @apply text-poopay-active;
   }
+  .scrollbar-poopay {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(123, 63, 29, 0.35) transparent;
+  }
+  .scrollbar-poopay::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scrollbar-poopay::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  .scrollbar-poopay::-webkit-scrollbar-thumb {
+    background-color: rgba(123, 63, 29, 0.35);
+    border-radius: 9999px;
+  }
+  .scrollbar-poopay:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(123, 63, 29, 0.5);
+  }
 }

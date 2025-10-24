@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useTheme } from "../hooks/useTheme"; // handled by the layout
 
 import { Auth, User } from "../api/api";
-import SimpleModal from "../components/SimpleModal";
+import MesSessions from "./SettingsComponents/MesSessions";
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
@@ -124,48 +124,10 @@ export default function Settings() {
         </button>
       </div>
 
-      <SimpleModal
+      <MesSessions
         isOpen={isSessionsModalOpen}
         onClose={() => setIsSessionsModalOpen(false)}
-      >
-        <div className="p-6 space-y-4">
-          <header className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-poopay-text">
-              Mes sessions actives
-            </h2>
-            <button
-              type="button"
-              onClick={() => setIsSessionsModalOpen(false)}
-              className="text-sm text-poopay-mute hover:text-poopay-text transition"
-            >
-              Fermer
-            </button>
-          </header>
-          <p className="text-sm text-poopay-mute">
-            Revois les appareils connectes et deconnecte ceux que tu ne reconnais pas.
-          </p>
-          <ul className="space-y-3 text-sm text-poopay-text">
-            <li className="flex items-center justify-between rounded-lg bg-poopay-card/80 px-4 py-3">
-              <div>
-                <p className="font-medium">iPhone 15 - Safari</p>
-                <p className="text-xs text-poopay-mute">Derniere activite : il y a 2 heures</p>
-              </div>
-              <button className="text-xs font-semibold text-red-500 hover:underline transition">
-                Deconnecter
-              </button>
-            </li>
-            <li className="flex items-center justify-between rounded-lg bg-poopay-card/80 px-4 py-3">
-              <div>
-                <p className="font-medium">MacBook - Chrome</p>
-                <p className="text-xs text-poopay-mute">Derniere activite : en cours</p>
-              </div>
-              <button className="text-xs font-semibold text-red-500 hover:underline transition">
-                Deconnecter
-              </button>
-            </li>
-          </ul>
-        </div>
-      </SimpleModal>
+      />
     </div>
   );
 }

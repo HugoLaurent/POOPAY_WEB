@@ -1,6 +1,4 @@
-// src/api/api.js
-const BASE = import.meta?.env?.VITE_API_URL || "http://localhost:3333";
-
+// client qui JETTE (inchangé)
 export async function api(
   path,
   { method = "GET", body, headers: extraHeaders } = {}
@@ -12,16 +10,23 @@ export async function api(
   if (!isForm) headers["Content-Type"] = "application/json";
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const res = await fetch(BASE + path, {
-    method,
-    headers,
-    body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
-  });
+  const res = await fetch(
+    (import.meta?.env?.VITE_API_URL || "http://localhost:3333") + path,
+    {
+      method,
+      headers,
+      body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
+    }
+  );
 
   const ct = res.headers.get("content-type") || "";
-  const payload = ct.includes("application/json")
-    ? await res.json()
-    : await res.text();
+  // ✅ petit plus: gérer 204 No Content proprement
+  const payload =
+    res.status === 204
+      ? null
+      : ct.includes("application/json")
+      ? await res.json()
+      : await res.text();
 
   if (!res.ok) {
     const msg = payload?.message || res.statusText || "Erreur";
@@ -40,6 +45,7 @@ export const Auth = {
   register: (payload) => api("/signup", { method: "POST", body: payload }),
 
   logout: () => api("/logout", { method: "POST" }),
+  getSessions: () => api("/sessions", { method: "GET" }),
   me: (token) =>
     api("/me", {
       method: "GET",
@@ -56,7 +62,12 @@ export const HomeFetch = {
   getStats: () => api("/home", { method: "GET" }),
 };
 
-// src/api/api.js
+export const SessionsFetch = {
+  getSessions: () => api("/sessions", { method: "GET" }),
+  deleteSession: (sessionId) =>
+    api(`/sessions/${sessionId}`, { method: "DELETE" }),
+};
+
 export const ClassementFetch = {
   getStats: (params = {}) => {
     const query = new URLSearchParams(params).toString();
@@ -64,7 +75,6 @@ export const ClassementFetch = {
   },
 };
 
-// src/api/api.js
 export const GroupsFetch = {
   getGroups: (params = {}) => {
     const query = new URLSearchParams(params).toString();

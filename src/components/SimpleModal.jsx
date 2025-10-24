@@ -105,7 +105,7 @@ export default function SimpleModal({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex flex-col justify-end pointer-events-none">
+    <div className="fixed  inset-0 z-50 flex flex-col justify-end pointer-events-none">
       <div
         role="presentation"
         aria-hidden="true"
@@ -118,7 +118,7 @@ export default function SimpleModal({
       <div
         role="dialog"
         aria-modal="true"
-        className={`relative w-full max-h-full overflow-y-auto bg-poopay-card text-poopay-text shadow-soft border border-black/5 dark:border-white/10 transition-transform duration-300 ease-out pointer-events-auto ${
+        className={`relative w-full max-h-[90vh] overflow-y-auto bg-poopay-card text-poopay-text shadow-soft border border-black/5 dark:border-white/10 transition-transform duration-300 ease-out pointer-events-auto ${
           isVisible ? "translate-y-0" : "translate-y-full"
         } ${className}`}
         style={{ transitionDuration: `${ANIMATION_DURATION}ms` }}
