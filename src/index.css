@@ -67,6 +67,9 @@
   /* Fond + couleur texte + transition douce */
   body {
     @apply bg-poopay-bg text-poopay-text/90 transition-colors duration-300;
+    /* Hide native scrollbar so it no longer reserves space on the right */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   /* Liens sobres */
@@ -90,19 +93,10 @@
       transparent
     );
   }
+}
 
-  /* Scrollbar discrète (navigateurs WebKit) */
-  *::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  *::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  *::-webkit-scrollbar-thumb {
-    background: color-mix(in oklab, var(--color-poopay-text) 25%, transparent);
-    border-radius: 9999px;
-  }
+html {
+  overflow-y: overlay;
 }
 
 /* =========================

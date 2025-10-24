@@ -6,7 +6,7 @@ export default function Header() {
   const notifCount = 3; // branche sur ton state/API
 
   return (
-    <header className="pt-4 px-5">
+    <header className="pt-4 px-5 max-w-3xl mx-auto w-full">
       <div className="max-w-3xl mx-auto">
         {/* Ligne titre + logo à droite, texte centré pile */}
         <div className="grid grid-cols-3 items-start">

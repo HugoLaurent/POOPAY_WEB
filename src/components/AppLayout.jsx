@@ -10,7 +10,7 @@ export default function Layout() {
   return (
     <div className="flex flex-col min-h-screen transition-colors duration-300">
       <Header />
-      <main className="flex-1 container mx-auto px-4 py-4 max-w-3xl">
+      <main className="flex-1 w-full px-4 py-4 max-w-3xl mx-auto">
         <Outlet />
       </main>
       <Footer />
