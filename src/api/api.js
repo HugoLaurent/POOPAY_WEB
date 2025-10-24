@@ -56,6 +56,7 @@ export const Auth = {
 export const User = {
   changeTheme: (theme) =>
     api("/change-theme", { method: "POST", body: { theme } }),
+  getAllData: () => api("/user/data", { method: "GET" }),
 };
 
 export const HomeFetch = {

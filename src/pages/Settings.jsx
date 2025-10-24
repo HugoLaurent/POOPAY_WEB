@@ -1,9 +1,10 @@
-// src/pages/Settings.jsx
+﻿// src/pages/Settings.jsx
 import { useState } from "react";
 import { useTheme } from "../hooks/useTheme"; // handled by the layout
 
 import { Auth, User } from "../api/api";
 import MesSessions from "./SettingsComponents/MesSessions";
+import { openPrintWindow } from "../utils/printExport";
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
@@ -12,6 +13,7 @@ export default function Settings() {
   );
   const [saving, setSaving] = useState(false);
   const [isSessionsModalOpen, setIsSessionsModalOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   async function handleTheme() {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -19,7 +21,7 @@ export default function Settings() {
       await User.changeTheme(newTheme);
       setTheme(newTheme);
     } catch (err) {
-      console.error("Impossible de changer le thème :", err);
+      console.error("Impossible de changer le theme :", err);
     }
   }
 
@@ -27,16 +29,34 @@ export default function Settings() {
     e.preventDefault();
     setSaving(true);
     localStorage.setItem("username", username);
-    // branche si besoin: await api.saveSettings({ username, notifications, theme, lang })
     setSaving(false);
+  }
+
+  async function handleGetAllData() {
+    setIsExporting(true);
+    try {
+      const data = await User.getAllData();
+      if (!data) {
+        console.error("Aucune donnee a imprimer.");
+        return;
+      }
+      const success = openPrintWindow(data);
+      if (!success) {
+        alert(
+          "Impossible d'ouvrir la fenetre d'impression. Autorisez les fenetres pop-up et reessayez."
+        );
+      }
+    } catch (err) {
+      console.error("Impossible de recuperer les donnees :", err);
+    } finally {
+      setIsExporting(false);
+    }
   }
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-poopay-bg pb-24">
       <div className="px-4 pt-4">
-        <h1 className="text-[22px] font-extrabold text-poopay-text">
-          Réglages
-        </h1>
+        <h1 className="text-[22px] font-extrabold text-poopay-text">Reglages</h1>
       </div>
 
       {/* Carte principale */}
@@ -55,7 +75,6 @@ export default function Settings() {
             placeholder="Ton pseudo"
           />
         </div>
-
         {/* Mode sombre */}
         <div className="flex items-center justify-between py-3">
           <div>
@@ -63,7 +82,7 @@ export default function Settings() {
               Mode sombre
             </p>
             <p className="text-[12px] text-poopay-mute mt-0.5">
-              Activer le thème sombre
+              Activer le theme sombre
             </p>
           </div>
           <button
@@ -81,7 +100,6 @@ export default function Settings() {
             />
           </button>
         </div>
-
         {/* Plus d'options */}
         <div className="mt-5 pt-4 border-t border-black/5 dark:border-white/5">
           <ul className="space-y-2 text-[14px]">
@@ -94,40 +112,61 @@ export default function Settings() {
                 Mes sessions
               </button>
             </li>
-            <li className="text-poopay-text/90">Exporter mes données</li>
-            <li className="text-poopay-text/90">Effacer le cache</li>
+
             <li className="text-poopay-text/90">
-              Confidentialité et permissions
+              <button
+                type="button"
+                onClick={handleGetAllData}
+                className="w-full text-left text-poopay-text/90 hover:text-poopay-text hover:underline transition disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isExporting}
+              >
+                {isExporting ? "Preparation de l'impression..." : "Exporter mes donnees"}
+              </button>
             </li>
-            <li className="text-poopay-text/90">Gérer l’abonnement</li>
+
+            <li className="text-poopay-text/90">
+              <button
+                type="button"
+                onClick={() => {
+                  localStorage.clear();
+                  // TODO: afficher un message de confirmation si necessaire
+                }}
+                className="w-full text-left text-poopay-text/90 hover:text-poopay-text hover:underline transition"
+              >
+                Effacer le cache
+              </button>
+            </li>
+
+            <li className="text-poopay-text/90">
+              Confidentialite et permissions
+            </li>
+            <li className="text-poopay-text/90">Gerer l'abonnement</li>
           </ul>
         </div>
+
+        <div className="mx-3 mt-5 flex items-center justify-between">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-4 py-2 rounded-xl text-sm font-semibold transition border bg-[#8B4513] text-white border-[#8B4513]"
+          >
+            {saving ? "Enregistrement..." : "Sauvegarder"}
+          </button>
+
+          <button
+            className="text-[14px] text-red-500"
+            onClick={() => {
+              Auth.logout();
+            }}
+          >
+            Se deconnecter
+          </button>
+        </div>
+        <MesSessions
+          isOpen={isSessionsModalOpen}
+          onClose={() => setIsSessionsModalOpen(false)}
+        />
       </div>
-
-      {/* Actions */}
-      <div className="mx-3 mt-5 flex items-center justify-between">
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="px-4 py-2 rounded-xl text-sm font-semibold transition border bg-[#8B4513] text-white border-[#8B4513]"
-        >
-          {saving ? "Enregistrement..." : "Sauvegarder"}
-        </button>
-
-        <button
-          className="text-[14px] text-red-500"
-          onClick={() => {
-            Auth.logout();
-          }}
-        >
-          Se déconnecter
-        </button>
-      </div>
-
-      <MesSessions
-        isOpen={isSessionsModalOpen}
-        onClose={() => setIsSessionsModalOpen(false)}
-      />
     </div>
   );
 }
