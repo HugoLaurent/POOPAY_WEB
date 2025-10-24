@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Hourglass } from "lucide-react";
 import { Auth } from "../api/api";
+import { applyTheme } from "../hooks/useTheme";
 import logo from "../assets/logo/logoPoopay.png";
 
 export default function Login() {
@@ -22,7 +23,18 @@ export default function Login() {
     try {
       const data = await Auth.login(email, pwd); // <= ici "data" = payload.data
       if (data?.token) localStorage.setItem("access_token", data.token);
-      if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
+      if (data?.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        if (typeof data.user.id !== "undefined") {
+          localStorage.setItem("user_id", String(data.user.id));
+        }
+        if (data.user.username) {
+          localStorage.setItem("username", data.user.username);
+        }
+        if (data.user.theme) {
+          applyTheme(data.user.theme);
+        }
+      }
       navigate("/");
     } catch (e) {
       setErr(e.message || "Erreur de connexion");

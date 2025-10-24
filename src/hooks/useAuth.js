@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Auth } from '../api/api';
+import { applyTheme } from './useTheme';
 
 /**
  * useAuth
@@ -52,6 +53,15 @@ export function useAuth({ redirectTo = '/login', verify = true } = {}) {
           try {
             localStorage.setItem('user', JSON.stringify(me));
           } catch {}
+          if (typeof me?.id !== 'undefined') {
+            localStorage.setItem('user_id', String(me.id));
+          }
+          if (me?.username) {
+            localStorage.setItem('username', me.username);
+          }
+          if (me?.theme) {
+            applyTheme(me.theme);
+          }
           setLoading(false);
         } else {
           throw new Error('Invalid token');
@@ -61,6 +71,8 @@ export function useAuth({ redirectTo = '/login', verify = true } = {}) {
         setError(e?.message || 'Unauthorized');
         localStorage.removeItem('access_token');
         localStorage.removeItem('user');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('username');
         setLoading(false);
         if (redirectTo && location.pathname !== '/login')
           navigate(redirectTo, { replace: true, state: { from: location } });
