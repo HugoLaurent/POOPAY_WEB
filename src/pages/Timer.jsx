@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RATE_PER_HOUR = 12; // euros gagnés par heure
 const GAMES = [
@@ -258,6 +259,7 @@ function FlappyTurdGame({ running, resetToken }) {
 }
 
 export default function Timer() {
+  const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState(GAMES[0].id);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [running, setRunning] = useState(false);
@@ -299,6 +301,10 @@ export default function Timer() {
     setRunning(true);
   };
 
+  const handleAbortToHome = () => {
+    navigate("/");
+  };
+
   const handleStopRequest = () => {
     setRunning(false);
     setShowConfirmation(true);
@@ -328,68 +334,81 @@ export default function Timer() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-poopay-bg pb-28 px-5">
-      <div className="mx-auto flex h-full max-w-3xl flex-col items-center">
-        <header className="w-full   px-5  text-center">
-          <p className="text-xs uppercase tracking-[0.3em] text-poopay-mute">
-            Compteur en direct
-          </p>
-          <div className="mt-3 flex flex-col items-center gap-1.5">
-            <span className="text-4xl font-extrabold tabular-nums text-poopay-text">
-              {formattedTime}
-            </span>
-            <span className="text-base font-semibold text-poopay-active">
-              {formattedEarnings} gagnés
-            </span>
-          </div>
-        </header>
+    <>
+      <div className="min-h-[calc(100vh-64px)] bg-poopay-bg px-5 pb-40">
+        <div className="mx-auto flex h-full max-w-3xl flex-col items-center">
+          <header className="w-full px-5 text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-poopay-mute">
+              Compteur en direct
+            </p>
+            <div className="mt-3 flex flex-col items-center gap-1.5">
+              <span className="text-4xl font-extrabold tabular-nums text-poopay-text">
+                {formattedTime}
+              </span>
+              <span className="text-base font-semibold text-poopay-active">
+                {formattedEarnings} gagnés
+              </span>
+            </div>
+          </header>
 
-        <section className="mt-4 w-full">
-          <h2 className="px-1 text-center text-lg font-semibold text-poopay-text">
-            Choisis ton mini-jeu pendant la session
-          </h2>
-          <div className="mt-4 flex gap-4 md:grid-cols-2">
-            {GAMES.map(({ id, name, description }) => {
-              const active = selectedGame === id;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setSelectedGame(id)}
-                  disabled={running}
-                  className={`w-full rounded-2xl border px-5 py-4 text-left transition ${
-                    active
-                      ? "border-poopay-active bg-poopay-active/15 text-poopay-text shadow-soft"
-                      : "border-black/10 bg-poopay-card/70 text-poopay-text/80 hover:bg-poopay-card"
-                  } ${running ? "cursor-not-allowed opacity-75" : ""}`}
-                >
-                  <div className="text-base font-semibold text-center">
-                    {name}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </section>
+          <section className="mt-4 w-full">
+            <h2 className="px-1 text-center text-lg font-semibold text-poopay-text">
+              Choisis ton mini-jeu pendant la session
+            </h2>
+            <div className="mt-4 flex gap-4 md:grid-cols-2">
+              {GAMES.map(({ id, name }) => {
+                const active = selectedGame === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setSelectedGame(id)}
+                    disabled={running}
+                    className={`w-full rounded-2xl border px-5 py-4 text-left transition ${
+                      active
+                        ? "border-poopay-active bg-poopay-active/15 text-poopay-text shadow-soft"
+                        : "border-black/10 bg-poopay-card/70 text-poopay-text/80 hover:bg-poopay-card"
+                    } ${running ? "cursor-not-allowed opacity-75" : ""}`}
+                  >
+                    <div className="text-base font-semibold text-center">
+                      {name}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
 
-        <section className="mt-8 w-full">
-          <GameViewport
-            gameId={activeGame}
-            running={running}
-            resetToken={gameResetToken}
-            showConfirmation={showConfirmation}
-          />
-        </section>
+          <section className="mt-8 w-full">
+            <GameViewport
+              gameId={activeGame}
+              running={running}
+              resetToken={gameResetToken}
+              showConfirmation={showConfirmation}
+            />
+          </section>
+        </div>
+      </div>
 
-        <section className="mt-8 flex w-full flex-col items-center gap-4">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-poopay-mute/15 bg-poopay-bg px-5 pb-8 pt-6 ">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-4">
           {!running && !showConfirmation && (
-            <button
-              type="button"
-              onClick={handleStart}
-              className="w-full max-w-xs rounded-3xl bg-poopay-active px-8 py-4 text-lg font-semibold uppercase tracking-wide text-white shadow-soft transition hover:opacity-95"
-            >
-              COMMENCER
-            </button>
+            <div className="w-full max-w-xs space-y-3">
+              <button
+                type="button"
+                onClick={handleStart}
+                className="w-full rounded-3xl bg-poopay-active px-8 py-4 text-lg font-semibold uppercase tracking-wide text-white shadow-soft transition hover:opacity-95"
+              >
+                COMMENCER
+              </button>
+              <button
+                type="button"
+                onClick={handleAbortToHome}
+                className="w-full rounded-3xl border border-poopay-mute/40 bg-poopay-card px-8 py-3 text-sm font-semibold uppercase tracking-wide text-poopay-text transition hover:bg-poopay-card/80"
+              >
+                ANNULER
+              </button>
+            </div>
           )}
 
           {running && (
@@ -420,8 +439,8 @@ export default function Timer() {
               </button>
             </div>
           )}
-        </section>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
