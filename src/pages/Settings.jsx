@@ -1,5 +1,6 @@
 ﻿// src/pages/Settings.jsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme"; // handled by the layout
 
 import { Auth, User } from "../api/api";
@@ -7,6 +8,7 @@ import MesSessions from "./SettingsComponents/MesSessions";
 import { openPrintWindow } from "../utils/printExport";
 
 export default function Settings() {
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const [username, setUsername] = useState(
     localStorage.getItem("username") || ""
@@ -14,6 +16,20 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [isSessionsModalOpen, setIsSessionsModalOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isConfirmingReset, setIsConfirmingReset] = useState(false);
+
+  async function clearCacheAndLogout() {
+    setIsConfirmingReset(false);
+    try {
+      Auth.logout();
+      localStorage.clear();
+      sessionStorage.clear?.();
+
+      navigate("/login");
+    } catch (err) {
+      console.error("Erreur lors du reset:", err);
+    }
+  }
 
   async function handleTheme() {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -56,7 +72,9 @@ export default function Settings() {
   return (
     <div className="min-h-[calc(100vh-64px)] bg-poopay-bg pb-24">
       <div className="px-4 pt-4">
-        <h1 className="text-[22px] font-extrabold text-poopay-text">Reglages</h1>
+        <h1 className="text-[22px] font-extrabold text-poopay-text">
+          Reglages
+        </h1>
       </div>
 
       {/* Carte principale */}
@@ -120,17 +138,16 @@ export default function Settings() {
                 className="w-full text-left text-poopay-text/90 hover:text-poopay-text hover:underline transition disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isExporting}
               >
-                {isExporting ? "Preparation de l'impression..." : "Exporter mes donnees"}
+                {isExporting
+                  ? "Preparation de l'impression..."
+                  : "Exporter mes donnees"}
               </button>
             </li>
 
             <li className="text-poopay-text/90">
               <button
                 type="button"
-                onClick={() => {
-                  localStorage.clear();
-                  // TODO: afficher un message de confirmation si necessaire
-                }}
+                onClick={() => setIsConfirmingReset(true)}
                 className="w-full text-left text-poopay-text/90 hover:text-poopay-text hover:underline transition"
               >
                 Effacer le cache
@@ -167,6 +184,46 @@ export default function Settings() {
           onClose={() => setIsSessionsModalOpen(false)}
         />
       </div>
+
+      {isConfirmingReset && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="confirm-reset-title"
+        >
+          <div className="w-full max-w-sm rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-poopay-card shadow-xl p-6 space-y-5">
+            <div className="space-y-2">
+              <h2
+                id="confirm-reset-title"
+                className="text-lg font-semibold text-poopay-text"
+              >
+                Cette action va vous deconnecter
+              </h2>
+              <p className="text-sm text-poopay-mute">
+                Effacer le cache supprimera vos donnees locales et vous
+                redirigera vers la page de connexion. Voulez-vous continuer ?
+              </p>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setIsConfirmingReset(false)}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-poopay-text bg-poopay-card/70 border border-black/10 hover:bg-poopay-card/90 transition"
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                onClick={clearCacheAndLogout}
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-red-500 hover:bg-red-600 transition"
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
