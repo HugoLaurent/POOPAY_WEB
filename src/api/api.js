@@ -47,6 +47,11 @@ export const Auth = {
     }),
 };
 
+export const User = {
+  changeTheme: (theme) =>
+    api("/change-theme", { method: "POST", body: { theme } }),
+};
+
 export const HomeFetch = {
   getStats: () => api("/home", { method: "GET" }),
 };

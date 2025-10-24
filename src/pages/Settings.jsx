@@ -1,22 +1,30 @@
 // src/pages/Settings.jsx
 import { useState } from "react";
-import { useTheme } from "../hooks/useTheme"; // géré par le layout
-import { Auth } from "../api/api";
+import { useTheme } from "../hooks/useTheme"; // handled by the layout
+
+import { Auth, User } from "../api/api";
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
   const [username, setUsername] = useState(
     localStorage.getItem("username") || ""
   );
-  const [notifications, setNotifications] = useState(true);
-  const [lang, setLang] = useState(localStorage.getItem("lang") || "fr");
   const [saving, setSaving] = useState(false);
+
+  async function handleTheme() {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    try {
+      await User.changeTheme(newTheme);
+      setTheme(newTheme);
+    } catch (err) {
+      console.error("Impossible de changer le thème :", err);
+    }
+  }
 
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
     localStorage.setItem("username", username);
-    localStorage.setItem("lang", lang);
     // branche si besoin: await api.saveSettings({ username, notifications, theme, lang })
     setSaving(false);
   }
@@ -31,10 +39,10 @@ export default function Settings() {
 
       {/* Carte principale */}
       <div className="mx-3 mt-3 rounded-3xl bg-poopay-card  px-5 py-5">
-        {/* Nom d’utilisateur */}
+        {/* Nom d'utilisateur */}
         <div className="mb-4">
           <label className="block text-[13px] font-medium text-poopay-mute mb-1">
-            Nom d’utilisateur
+            Nom d'utilisateur
           </label>
           <input
             value={username}
@@ -57,7 +65,7 @@ export default function Settings() {
             </p>
           </div>
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={handleTheme}
             className={`w-12 h-7 rounded-full p-1 transition 
               ${
                 theme === "dark"
@@ -93,7 +101,7 @@ export default function Settings() {
           disabled={saving}
           className="px-4 py-2 rounded-xl text-sm font-semibold transition border bg-[#8B4513] text-white border-[#8B4513]"
         >
-          {saving ? "Enregistrement…" : "Sauvegarder"}
+          {saving ? "Enregistrement..." : "Sauvegarder"}
         </button>
 
         <button
