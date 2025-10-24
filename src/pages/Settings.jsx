@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTheme } from "../hooks/useTheme"; // handled by the layout
 
 import { Auth, User } from "../api/api";
+import SimpleModal from "../components/SimpleModal";
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
@@ -10,6 +11,7 @@ export default function Settings() {
     localStorage.getItem("username") || ""
   );
   const [saving, setSaving] = useState(false);
+  const [isSessionsModalOpen, setIsSessionsModalOpen] = useState(false);
 
   async function handleTheme() {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -83,7 +85,15 @@ export default function Settings() {
         {/* Plus d'options */}
         <div className="mt-5 pt-4 border-t border-black/5 dark:border-white/5">
           <ul className="space-y-2 text-[14px]">
-            <li className="text-poopay-text/90">Mes sessions</li>
+            <li>
+              <button
+                type="button"
+                onClick={() => setIsSessionsModalOpen(true)}
+                className="w-full text-left text-poopay-text/90 hover:text-poopay-text hover:underline transition"
+              >
+                Mes sessions
+              </button>
+            </li>
             <li className="text-poopay-text/90">Exporter mes données</li>
             <li className="text-poopay-text/90">Effacer le cache</li>
             <li className="text-poopay-text/90">
@@ -113,6 +123,49 @@ export default function Settings() {
           Se déconnecter
         </button>
       </div>
+
+      <SimpleModal
+        isOpen={isSessionsModalOpen}
+        onClose={() => setIsSessionsModalOpen(false)}
+      >
+        <div className="p-6 space-y-4">
+          <header className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-poopay-text">
+              Mes sessions actives
+            </h2>
+            <button
+              type="button"
+              onClick={() => setIsSessionsModalOpen(false)}
+              className="text-sm text-poopay-mute hover:text-poopay-text transition"
+            >
+              Fermer
+            </button>
+          </header>
+          <p className="text-sm text-poopay-mute">
+            Revois les appareils connectes et deconnecte ceux que tu ne reconnais pas.
+          </p>
+          <ul className="space-y-3 text-sm text-poopay-text">
+            <li className="flex items-center justify-between rounded-lg bg-poopay-card/80 px-4 py-3">
+              <div>
+                <p className="font-medium">iPhone 15 - Safari</p>
+                <p className="text-xs text-poopay-mute">Derniere activite : il y a 2 heures</p>
+              </div>
+              <button className="text-xs font-semibold text-red-500 hover:underline transition">
+                Deconnecter
+              </button>
+            </li>
+            <li className="flex items-center justify-between rounded-lg bg-poopay-card/80 px-4 py-3">
+              <div>
+                <p className="font-medium">MacBook - Chrome</p>
+                <p className="text-xs text-poopay-mute">Derniere activite : en cours</p>
+              </div>
+              <button className="text-xs font-semibold text-red-500 hover:underline transition">
+                Deconnecter
+              </button>
+            </li>
+          </ul>
+        </div>
+      </SimpleModal>
     </div>
   );
 }
