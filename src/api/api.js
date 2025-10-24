@@ -81,4 +81,6 @@ export const GroupsFetch = {
     const query = new URLSearchParams(params).toString();
     return api(`/groups${query ? "?" + query : ""}`, { method: "GET" });
   },
+  createGroup: (payload) =>
+    api("/groups/create", { method: "POST", body: payload }),
 };

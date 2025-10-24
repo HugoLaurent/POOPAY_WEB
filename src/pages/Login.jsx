@@ -31,6 +31,9 @@ export default function Login() {
         if (data.user.username) {
           localStorage.setItem("username", data.user.username);
         }
+        if (data.user.isPremium) {
+          localStorage.setItem("isPremium", String(data.user.isPremium));
+        }
         if (data.user.theme) {
           applyTheme(data.user.theme);
         }
