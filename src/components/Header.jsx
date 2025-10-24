@@ -15,20 +15,15 @@ export default function Header() {
 
           {/* Col 2 : texte centré */}
           <div className="text-center">
-            <h1 className="text-3xl font-extrabold tracking-tight text-poopay-text">
+            <h1 className="text-3xl text-center font-extrabold tracking-tight text-poopay-text">
               POOPAY
             </h1>
-            {pathname !== "/settings" && (
-              <p className="mt-1 text-poopay-text/80">
-                Combien tu gagnes aux toilettes au travail ?
-              </p>
-            )}
           </div>
 
           {/* Col 3 : logo + badge notifs aligné à droite */}
           <div className="justify-self-end">
             <button
-              className="relative w-18 h-18 flex items-center justify-center rounded-full
+              className="relative w-10 h-10 flex items-center justify-center rounded-full
                          hover:scale-105 active:scale-95 transition-transform"
               aria-label="Notifications"
             >

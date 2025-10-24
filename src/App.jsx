@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppLayout, AuthLayout } from "@/components";
-import { Groupe, Home, Leaderboard, Login, Settings, SignUp } from "@/pages";
+import { Groupe, Home, Leaderboard, Login, Settings, SignUp, Timer } from "@/pages";
 import "./App.css";
 
 function App() {
@@ -15,6 +15,7 @@ function App() {
       <Route element={<AppLayout />}>
         <Route index element={<Home />} />
         <Route path="leaderboard" element={<Leaderboard />} />
+        <Route path="timer" element={<Timer />} />
         <Route path="group" element={<Groupe />} />
         <Route path="settings" element={<Settings />} />
       </Route>
