@@ -1,8 +1,7 @@
 // src/pages/Groups.jsx
 import { useEffect, useState } from "react";
-import SimpleModal from "@/components/SimpleModal";
-import Toast from "@/components/Toast";
-import { GroupsFetch } from "@/api/api";
+import { SimpleModal, Toast } from "@/components";
+import { GroupsFetch } from "@/api";
 import {
   PeriodChips,
   GroupCard,

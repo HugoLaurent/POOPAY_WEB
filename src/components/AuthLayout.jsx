@@ -1,6 +1,6 @@
 // AuthLayout.jsx
 import { Outlet } from "react-router-dom";
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from "@/hooks";
 
 export default function AuthLayout() {
   useTheme(); // apply HTML theme class on entry

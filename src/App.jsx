@@ -1,13 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AppLayout from "./components/AppLayout";
-import AuthLayout from "./components/AuthLayout";
-import Home from "./pages/Home";
-import Groupe from "./pages/Groupe";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
+import { AppLayout, AuthLayout } from "@/components";
+import { Groupe, Home, Leaderboard, Login, Settings, SignUp } from "@/pages";
 import "./App.css";
-import Leaderboard from "./pages/Leaderboard";
-import SettingsPage from "./pages/Settings";
 
 function App() {
   return (
@@ -22,7 +16,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="leaderboard" element={<Leaderboard />} />
         <Route path="group" element={<Groupe />} />
-        <Route path="settings" element={<SettingsPage />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );

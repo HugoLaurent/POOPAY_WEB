@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { DayPills } from "@/components/DayPills";
-import { HomeFetch } from "@/api/api";
+import { DayPills } from "@/components";
+import { HomeFetch } from "@/api";
 
 // utils format
 const fmtH = (h) => `${h.toFixed(1)}h`;

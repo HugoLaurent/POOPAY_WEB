@@ -1,4 +1,4 @@
-import SimpleModal from "@/components/SimpleModal";
+import { SimpleModal } from "@/components";
 import MembersTable from "./MembersTable";
 import { formatDate } from "./utils";
 

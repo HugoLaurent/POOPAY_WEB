@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Eye, EyeOff, Hourglass } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Auth } from "@/api/api";
+import { Auth } from "@/api";
 
 import logo from "@/assets/logo/logoPoopay.png";
 
