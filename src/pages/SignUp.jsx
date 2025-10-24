@@ -2,12 +2,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Eye, EyeOff, Hourglass } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Auth } from "../api/api";
+import { Auth } from "@/api/api";
 
-import logo from "../assets/logo/logoPoopay.png";
+import logo from "@/assets/logo/logoPoopay.png";
 
-import departements from "../assets/data/departement.json";
-import categories from "../assets/data/category.json";
+import departements from "@/assets/data/departement.json";
+import categories from "@/assets/data/category.json";
 
 export default function SignUp() {
   const navigate = useNavigate();

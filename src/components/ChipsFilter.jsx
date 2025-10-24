@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import categories from "../assets/data/category.json";
-import departments from "../assets/data/departement.json";
+import categories from "@/assets/data/category.json";
+import departments from "@/assets/data/departement.json";
 
 const mapDepartments = (raw) => {
   const arr = Array.isArray(raw) ? raw : raw?.items || [];

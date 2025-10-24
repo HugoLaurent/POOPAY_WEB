@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import ConfirmModal from "../../components/ConfirmModal";
-import SimpleModal from "../../components/SimpleModal";
-import Toast from "../../components/Toast";
-import { SessionsFetch } from "../../api/api";
+import ConfirmModal from "@/components/ConfirmModal";
+import SimpleModal from "@/components/SimpleModal";
+import Toast from "@/components/Toast";
+import { SessionsFetch } from "@/api/api";
 
 export default function MesSessions({ isOpen, onClose }) {
   const [sessions, setSessions] = useState([]);

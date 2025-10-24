@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ClassementFetch } from "../api/api";
-import ChipsFilter from "../components/ChipsFilter";
+import { ClassementFetch } from "@/api/api";
+import ChipsFilter from "@/components/ChipsFilter";
 
 const fmtEuro = (n) =>
   typeof n === "number"

@@ -1,9 +1,9 @@
 // AuthLayout.jsx
 import { Outlet } from "react-router-dom";
-import { useTheme } from "../hooks/useTheme"; // ⬅️ ajoute ça
+import { useTheme } from "@/hooks/useTheme";
 
 export default function AuthLayout() {
-  useTheme(); // ⬅️ déclenche l’effet qui applique .light/.dark sur <html>
+  useTheme(); // apply HTML theme class on entry
 
   return (
     <main className="min-h-screen bg-poopay-bg flex items-center justify-center px-5">

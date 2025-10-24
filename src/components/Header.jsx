@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import logo from "../assets/logo/logoPoopay.png";
+import logo from "@/assets/logo/logoPoopay.png";
 
 export default function Header() {
   const { pathname } = useLocation();

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Hourglass } from "lucide-react";
-import { Auth } from "../api/api";
-import { applyTheme } from "../hooks/useTheme";
-import logo from "../assets/logo/logoPoopay.png";
+import { Auth } from "@/api/api";
+import { applyTheme } from "@/hooks/useTheme";
+import logo from "@/assets/logo/logoPoopay.png";
 
 export default function Login() {
   const navigate = useNavigate();

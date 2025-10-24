@@ -1,7 +1,7 @@
 ﻿import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Layout() {
   // Enforce auth on protected routes

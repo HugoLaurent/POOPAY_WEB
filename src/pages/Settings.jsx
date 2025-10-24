@@ -1,11 +1,11 @@
 ﻿// src/pages/Settings.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../hooks/useTheme"; // handled by the layout
+import { useTheme } from "@/hooks/useTheme"; // handled by the layout
 
-import { Auth, User } from "../api/api";
+import { Auth, User } from "@/api/api";
 import MesSessions from "./SettingsComponents/MesSessions";
-import { openPrintWindow } from "../utils/printExport";
+import { openPrintWindow } from "@/utils/printExport";
 
 export default function Settings() {
   const navigate = useNavigate();
