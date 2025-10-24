@@ -1,6 +1,7 @@
 // src/pages/Settings.jsx
 import { useState } from "react";
 import { useTheme } from "../hooks/useTheme"; // géré par le layout
+import { Auth } from "../api/api";
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
@@ -98,7 +99,7 @@ export default function Settings() {
         <button
           className="text-[14px] text-red-500"
           onClick={() => {
-            /* onLogout?.() */
+            Auth.logout();
           }}
         >
           Se déconnecter
