@@ -9,6 +9,9 @@ export default function MesSessions({ isOpen, onClose }) {
   const [sessionToDelete, setSessionToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [isDeleteAllConfirmOpen, setIsDeleteAllConfirmOpen] = useState(false);
+  const [deleteAllLoading, setDeleteAllLoading] = useState(false);
+  const [deleteAllError, setDeleteAllError] = useState("");
   const [toast, setToast] = useState({
     isOpen: false,
     message: "",
@@ -51,6 +54,50 @@ export default function MesSessions({ isOpen, onClose }) {
     () => sessions && sessions.length > 0,
     [sessions]
   );
+
+  async function deleteAllSessions() {
+    if (deleteAllLoading) return;
+
+    setDeleteAllLoading(true);
+    setDeleteAllError("");
+    setError("");
+    setLoading(true);
+    try {
+      await SessionsFetch.deleteAllSessions();
+      setSessions([]);
+      setToast({
+        isOpen: true,
+        message: "Toutes les sessions ont ete supprimees avec succes.",
+        variant: "success",
+      });
+      setIsDeleteAllConfirmOpen(false);
+    } catch (err) {
+      const message =
+        err?.message || "Impossible de supprimer les sessions pour le moment.";
+      setError(message);
+      setDeleteAllError(message);
+      setToast({
+        isOpen: true,
+        message,
+        variant: "error",
+      });
+    } finally {
+      setLoading(false);
+      setDeleteAllLoading(false);
+    }
+  }
+
+  function handleRequestDeleteAll() {
+    if (!hasSessions || deleteAllLoading) return;
+    setDeleteAllError("");
+    setIsDeleteAllConfirmOpen(true);
+  }
+
+  function handleCancelDeleteAll() {
+    if (deleteAllLoading) return;
+    setIsDeleteAllConfirmOpen(false);
+    setDeleteAllError("");
+  }
 
   function handleRequestDelete(sessionMeta) {
     if (!sessionMeta?.id) return;
@@ -129,6 +176,14 @@ export default function MesSessions({ isOpen, onClose }) {
           <p className="text-sm text-poopay-mute">
             Tes passages toilettes recents et leurs gains.
           </p>
+          <button
+            type="button"
+            onClick={handleRequestDeleteAll}
+            disabled={!hasSessions || loading || deleteAllLoading}
+            className="text-xs font-semibold text-red-500 hover:underline transition disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:no-underline"
+          >
+            Supprimer toutes les sessions
+          </button>
 
           {error && (
             <div className="rounded-lg bg-red-500/10 px-4 py-3 text-sm text-red-500">
@@ -201,6 +256,18 @@ export default function MesSessions({ isOpen, onClose }) {
           )}
         </div>
       </SimpleModal>
+
+      <ConfirmModal
+        isOpen={isDeleteAllConfirmOpen}
+        title="Supprimer toutes les sessions"
+        message="Es-tu sur de vouloir supprimer toutes les sessions actives ? Cette action est definitive."
+        confirmLabel="Tout supprimer"
+        cancelLabel="Annuler"
+        error={deleteAllError}
+        isConfirming={deleteAllLoading}
+        onConfirm={deleteAllSessions}
+        onCancel={handleCancelDeleteAll}
+      />
 
       <ConfirmModal
         isOpen={Boolean(sessionToDelete)}
@@ -291,3 +358,4 @@ function formatSessionEarnings(amount) {
     }) + " EUR"
   );
 }
+

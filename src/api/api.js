@@ -75,6 +75,7 @@ export const SessionsFetch = {
   getSessions: () => api("/sessions", { method: "GET" }),
   deleteSession: (sessionId) =>
     api(`/sessions/${sessionId}`, { method: "DELETE" }),
+  deleteAllSessions: () => api(`/sessions`, { method: "DELETE" }),
 };
 
 export const ClassementFetch = {
