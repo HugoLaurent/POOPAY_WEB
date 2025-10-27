@@ -1,23 +1,17 @@
-import { useMemo } from "react";
-export function DayPills({ activeIndex, setActiveIndex }) {
-  const today = new Date();
-  const days = useMemo(() => {
-    const labels = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-    const dates = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - ((today.getDay() + 6) % 7) + i);
-      dates.push(d.getDate());
-    }
-    return labels.map((l, i) => ({ label: l, date: dates[i] }));
-  }, []);
+import { memo } from "react";
+
+export const DayPills = memo(function DayPills({
+  days,
+  activeIndex,
+  setActiveIndex,
+}) {
   return (
-    <div className="flex justify-around items-center  px-2 pb-1 pt-2">
+    <div className="flex justify-around items-center px-2 pb-1 pt-2">
       {days.map((day, i) => {
         const active = i === activeIndex;
         return (
           <button
-            key={day.date}
+            key={`${day.label}-${day.date.toISOString()}`} // évite les collisions de fin de mois
             className={[
               "flex flex-col items-center justify-center shrink-0 w-12 h-12 rounded-full",
               active
@@ -25,13 +19,13 @@ export function DayPills({ activeIndex, setActiveIndex }) {
                 : "bg-poopay-pill text-poopay-text/70",
             ].join(" ")}
             onClick={() => setActiveIndex(i)}
-            aria-label={`${day.label} ${day.date}`}
+            aria-label={`${day.label} ${day.date.getDate()}`}
           >
             <span className="text-[11px] leading-none">{day.label}</span>
-            <span className="mt-0.5 font-semibold">{day.date}</span>
+            <span className="mt-0.5 font-semibold">{day.date.getDate()}</span>
           </button>
         );
       })}
     </div>
   );
-}
+});

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Hourglass } from "lucide-react";
 import { Auth } from "@/api";
-import { applyTheme } from "@/hooks";
+import { useAuthContext } from "@/context/AuthContext";
 import logo from "@/assets/logo/logoPoopay.png";
 
 export default function Login() {
@@ -11,6 +11,7 @@ export default function Login() {
   const [pwd, setPwd] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const auth = useAuthContext();
 
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
   const canSubmit =
@@ -21,25 +22,12 @@ export default function Login() {
     setErr("");
     setLoading(true);
     try {
-      const data = await Auth.login(email, pwd); // <= ici "data" = payload.data
-      if (data?.token) localStorage.setItem("access_token", data.token);
-      if (data?.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        if (typeof data.user.id !== "undefined") {
-          localStorage.setItem("user_id", String(data.user.id));
-        }
-        if (data.user.username) {
-          localStorage.setItem("username", data.user.username);
-        }
-        if (data.user.isPremium) {
-          localStorage.setItem("isPremium", String(data.user.isPremium));
-        }
-        if (data.user.theme) {
-          applyTheme(data.user.theme);
-        }
-      }
+      const data = await Auth.login(email, pwd);
+      auth.login(data);
       navigate("/");
     } catch (e) {
+      console.log("Erreur lors de la connexion :", e);
+
       setErr(e.message || "Erreur de connexion");
     } finally {
       setLoading(false);

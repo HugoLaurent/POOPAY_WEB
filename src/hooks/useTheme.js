@@ -1,40 +1,28 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
+import { useAuthContext } from "@/context/AuthContext";
+import { applyTheme } from "@/utils/theme";
 
-export function applyTheme(theme = "system") {
-  if (typeof document === "undefined") return;
-
-  const root = document.documentElement;
-  root.classList.remove("light", "dark");
-
-  if (theme === "light") {
-    root.classList.add("light");
-  } else if (theme === "dark") {
-    root.classList.add("dark");
-  } else if (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-    root.classList.add("dark");
-  }
-
-  try {
-    localStorage.setItem("theme", theme);
-  } catch {}
-}
+export { applyTheme };
 
 export function useTheme() {
-  const [theme, setTheme] = useState(() => {
-    try {
-      return localStorage.getItem("theme") || "system";
-    } catch {
-      return "system";
-    }
-  });
+  const { user, updateUser } = useAuthContext();
+  const theme = user?.theme ?? "system";
 
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
 
+  const setTheme = useCallback(
+    (nextTheme) => {
+      applyTheme(nextTheme);
+      updateUser((prev) => {
+        if (!prev) return prev;
+        return { ...prev, theme: nextTheme };
+      });
+    },
+    [updateUser]
+  );
+
   return { theme, setTheme };
 }
+

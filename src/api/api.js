@@ -1,6 +1,6 @@
 // api.js
 
-const RAW_BASE = import.meta?.env?.VITE_API_URL ?? "";
+const RAW_BASE = import.meta?.env?.VITE_API_URL ?? "http://localhost:3333";
 // retire tous les / de fin (http://x:3333//// -> http://x:3333)
 const BASE = RAW_BASE.replace(/\/+$/, ""); // peut être '' si tu veux du relatif
 

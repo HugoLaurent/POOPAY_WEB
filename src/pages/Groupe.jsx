@@ -7,6 +7,7 @@ import {
   GroupCard,
   GroupDetailModal,
 } from "./GroupComponents";
+import { useAuthContext } from "@/context/AuthContext";
 
 function normalizeGroupsResponse(res) {
   if (Array.isArray(res?.data)) return res.data;
@@ -16,18 +17,17 @@ function normalizeGroupsResponse(res) {
 }
 
 export default function Groups() {
+  const { user } = useAuthContext();
+  const isPremium = Boolean(user?.isPremium);
+  const defaultMaxMembers = isPremium ? "10" : "3";
   const [period, setPeriod] = useState("month");
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [groups, setGroups] = useState([]);
-  const isPremium = localStorage.getItem("isPremium") === "true";
-
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [createName, setCreateName] = useState("");
   const [createDescription, setCreateDescription] = useState("");
-  const [createMaxMembers, setCreateMaxMembers] = useState(
-    isPremium ? "10" : "3"
-  );
+  const [createMaxMembers, setCreateMaxMembers] = useState(defaultMaxMembers);
   const [createError, setCreateError] = useState("");
   const [createLoading, setCreateLoading] = useState(false);
 
@@ -38,6 +38,12 @@ export default function Groups() {
   });
 
   const [selectedGroup, setSelectedGroup] = useState(null);
+
+  useEffect(() => {
+    if (!isCreateModalOpen) {
+      setCreateMaxMembers(defaultMaxMembers);
+    }
+  }, [defaultMaxMembers, isCreateModalOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -79,7 +85,7 @@ export default function Groups() {
   function resetCreateForm() {
     setCreateName("");
     setCreateDescription("");
-    setCreateMaxMembers(isPremium ? "10" : "3");
+    setCreateMaxMembers(defaultMaxMembers);
     setCreateError("");
   }
 
