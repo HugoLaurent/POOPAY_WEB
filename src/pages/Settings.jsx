@@ -1,27 +1,31 @@
 ﻿// src/pages/Settings.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/hooks"; // handled by the layout
 
-import { Auth, User } from "@/api";
+import { User } from "@/api";
 import { MesSessions } from "@/pages/SettingsComponents";
 import { openPrintWindow } from "@/utils";
+import { useAuthContext } from "@/context/AuthContext";
 
 export default function Settings() {
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
-  const [username, setUsername] = useState(
-    localStorage.getItem("username") || ""
-  );
+  const { theme } = useTheme();
+  const { user, logout, updateUser } = useAuthContext();
+  const [username, setUsername] = useState(user?.username ?? "");
   const [saving, setSaving] = useState(false);
   const [isSessionsModalOpen, setIsSessionsModalOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isConfirmingReset, setIsConfirmingReset] = useState(false);
 
+  useEffect(() => {
+    setUsername(user?.username ?? "");
+  }, [user?.username]);
+
   async function clearCacheAndLogout() {
     setIsConfirmingReset(false);
     try {
-      Auth.logout();
+      await logout({ notifyServer: true });
       localStorage.clear();
       sessionStorage.clear?.();
 
@@ -35,7 +39,7 @@ export default function Settings() {
     const newTheme = theme === "dark" ? "light" : "dark";
     try {
       await User.changeTheme(newTheme);
-      setTheme(newTheme);
+      updateUser({ theme: newTheme });
     } catch (err) {
       console.error("Impossible de changer le theme :", err);
     }
@@ -44,7 +48,7 @@ export default function Settings() {
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
-    localStorage.setItem("username", username);
+    updateUser((prev) => (prev ? { ...prev, username } : prev));
     setSaving(false);
   }
 
@@ -172,8 +176,9 @@ export default function Settings() {
 
           <button
             className="text-[14px] text-red-500"
-            onClick={() => {
-              Auth.logout();
+            onClick={async () => {
+              await logout({ notifyServer: true });
+              navigate("/login");
             }}
           >
             Se deconnecter

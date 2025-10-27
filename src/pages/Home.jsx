@@ -1,9 +1,8 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { DayPills } from "@/components";
+import { DayPills, GoogleAd } from "@/components";
 import { HomeFetch } from "@/api";
 
-// utils format
 const fmtH = (h) => `${h.toFixed(1)}h`;
 const euro = (n) =>
   new Intl.NumberFormat("fr-FR", {
@@ -12,61 +11,30 @@ const euro = (n) =>
     maximumFractionDigits: 0,
   }).format(n);
 
-// ✨ carte stats (Sessions / Gagné / Temps passé)
-function StatRow({ title, sessions, earned, hours }) {
-  return (
-    <section className="mb-4">
-      <h3 className="px-4 mb-2 text-[15px] font-semibold text-poopay-text">
-        {title}
-      </h3>
-      <div className="mx-2 rounded-3xl bg-poopay-card shadow-soft px-5 py-6">
-        <div className="grid grid-cols-3 text-center">
-          <div>
-            <div className="text-2xl font-semibold text-poopay-text">
-              {sessions}
-            </div>
-            <div className="text-[13px] text-poopay-mute mt-1">Sessions</div>
-          </div>
-          <div>
-            <div className="text-2xl font-semibold text-poopay-text">
-              {euro(earned)}
-            </div>
-            <div className="text-[13px] text-poopay-mute mt-1">Gagné</div>
-          </div>
-          <div>
-            <div className="text-2xl font-semibold text-poopay-text">
-              {fmtH(hours)}
-            </div>
-            <div className="text-[13px] text-poopay-mute mt-1">Temps passé</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+const LABELS_FR = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+const toFrLabel = (date) => LABELS_FR[(date.getDay() + 6) % 7];
 
-// item classement
-function RankItem({ left, right, medal }) {
-  const medalEmoji = { 1: "🥇", 2: "🥈", 3: "🥉" }[medal] ?? "🏅";
-  return (
-    <div className="mx-2 mb-3 rounded-3xl bg-poopay-card shadow-soft px-5 py-4 flex items-center justify-between">
-      <div className="text-poopay-text/90">{left}</div>
-      <div className="text-poopay-text/90">
-        {right} <span className="ml-1">{medalEmoji}</span>
-      </div>
-    </div>
-  );
+function startOfDay(d) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+function endOfDay(d) {
+  const x = new Date(d);
+  x.setHours(23, 59, 59, 999);
+  return x;
 }
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
-  // Index du jour actif dans la semaine (0 = Lundi ... 6 = Dimanche)
+
+  // 0..6 où 6 === aujourd'hui
   const [activeIndex, setActiveIndex] = useState(6);
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
         setLoading(true);
         const res = await HomeFetch.getStats();
@@ -77,27 +45,83 @@ export default function Home() {
       } finally {
         setLoading(false);
       }
-    };
-    fetchData();
+    })();
   }, []);
 
-  // 🧮 Calculs dérivés
-  // Statistiques du jour sélectionné via DayPills
-  const selectedDay = useMemo(() => {
-    if (!data) return { sessions: 0, earned: 0, hours: 0 };
-    const now = new Date();
-    const monday = new Date(now);
-    // Trouver le lundi de la semaine courante
-    monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-    monday.setHours(0, 0, 0, 0);
+  // ⬇️ Les 7 jours glissants (du plus ancien au plus récent, aujourd’hui = index 6)
+  const days = useMemo(() => {
+    const today = startOfDay(new Date());
+    const arr = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      arr.push({ date: d, label: toFrLabel(d) });
+    }
+    return arr;
+  }, []);
 
-    const selected = new Date(monday);
-    selected.setDate(monday.getDate() + (Number(activeIndex) || 0));
-    selected.setHours(0, 0, 0, 0);
-
-    const sessionsDay = data.sessions.filter(
-      (s) => new Date(s.startTime).toDateString() === selected.toDateString()
+  // ✨ carte stats (Sessions / Gagné / Temps passé)
+  function StatRow({ title, sessions, earned, hours }) {
+    return (
+      <section className="mb-4">
+        <h3 className="px-4 mb-2 text-[15px] font-semibold text-poopay-text">
+          {title}
+        </h3>
+        <div className="mx-2 rounded-3xl bg-poopay-card shadow-soft px-5 py-6">
+          <div className="grid grid-cols-3 text-center">
+            <div>
+              <div className="text-2xl font-semibold text-poopay-text">
+                {sessions}
+              </div>
+              <div className="text-[13px] text-poopay-mute mt-1">Sessions</div>
+            </div>
+            <div>
+              <div className="text-2xl font-semibold text-poopay-text">
+                {euro(earned)}
+              </div>
+              <div className="text-[13px] text-poopay-mute mt-1">Gagné</div>
+            </div>
+            <div>
+              <div className="text-2xl font-semibold text-poopay-text">
+                {fmtH(hours)}
+              </div>
+              <div className="text-[13px] text-poopay-mute mt-1">
+                Temps passé
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     );
+  }
+
+  // item classement
+  function RankItem({ left, right, medal }) {
+    const medalEmoji = { 1: "🥇", 2: "🥈", 3: "🥉" }[medal] ?? "🏅";
+    return (
+      <div className="mx-2 mb-3 rounded-3xl bg-poopay-card shadow-soft px-5 py-4 flex items-center justify-between">
+        <div className="text-poopay-text/90">{left}</div>
+        <div className="text-poopay-text/90">
+          {right} <span className="ml-1">{medalEmoji}</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 🧮 Statistiques du jour sélectionné via DayPills — basé sur days[activeIndex]
+  const selectedDay = useMemo(() => {
+    if (!data) return { sessions: 0, earned: 0, hours: 0, selectedDate: null };
+    const sel = days[activeIndex]?.date;
+    if (!sel) return { sessions: 0, earned: 0, hours: 0, selectedDate: null };
+
+    const start = startOfDay(sel);
+    const end = endOfDay(sel);
+
+    const sessionsDay = data.sessions.filter((s) => {
+      const t = new Date(s.startTime);
+      return t >= start && t <= end;
+    });
+
     const earned = sessionsDay.reduce(
       (sum, s) => sum + Number(s.amountEarned || 0),
       0
@@ -106,20 +130,23 @@ export default function Home() {
       (sum, s) => sum + (s.durationSeconds || 0),
       0
     );
+
     return {
       sessions: sessionsDay.length,
       earned,
       hours: seconds / 3600,
-      selectedDate: selected,
+      selectedDate: sel,
     };
-  }, [data, activeIndex]);
+  }, [data, days, activeIndex]);
 
+  // Cette semaine (lundi → maintenant) inchangé
   const week = useMemo(() => {
     if (!data) return { sessions: 0, earned: 0, hours: 0 };
     const now = new Date();
     const monday = new Date(now);
     monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
     monday.setHours(0, 0, 0, 0);
+
     const sessionsWeek = data.sessions.filter(
       (s) => new Date(s.startTime) >= monday
     );
@@ -131,11 +158,7 @@ export default function Home() {
       (sum, s) => sum + (s.durationSeconds || 0),
       0
     );
-    return {
-      sessions: sessionsWeek.length,
-      earned,
-      hours: seconds / 3600,
-    };
+    return { sessions: sessionsWeek.length, earned, hours: seconds / 3600 };
   }, [data]);
 
   const month = useMemo(() => {
@@ -153,50 +176,49 @@ export default function Home() {
       (sum, s) => sum + (s.durationSeconds || 0),
       0
     );
-    return {
-      sessions: sessionsMonth.length,
-      earned,
-      hours: seconds / 3600,
-    };
+    return { sessions: sessionsMonth.length, earned, hours: seconds / 3600 };
   }, [data]);
 
-  // --- UI ---
-  if (loading)
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-poopay-mute">
         <span className="animate-pulse">Chargement...</span>
       </div>
     );
-
-  if (error)
+  }
+  if (error) {
     return (
       <div className="flex items-center justify-center h-screen text-red-500">
         {error}
       </div>
     );
-
+  }
   if (!data) return null;
+
+  // Titre du bloc "Aujourd'hui" = label + date du jour sélectionné (issu de days)
+  const titleSelected = (() => {
+    const d = selectedDay.selectedDate || new Date();
+    const label = days[activeIndex]?.label ?? "";
+    return `${label} ${d.getDate()}`;
+  })();
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-poopay-bg pb-24">
       {/* strip de jours */}
-      <DayPills activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+      <DayPills
+        days={days}
+        activeIndex={activeIndex}
+        setActiveIndex={setActiveIndex}
+      />
 
       {/* blocs stats */}
       <div className="mt-4">
-        {(() => {
-          const labels = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-          const d = selectedDay.selectedDate || new Date();
-          const title = `${labels[activeIndex] || ""} ${d.getDate()}`;
-          return (
-            <StatRow
-              title={title}
-              sessions={selectedDay.sessions}
-              earned={selectedDay.earned}
-              hours={selectedDay.hours}
-            />
-          );
-        })()}
+        <StatRow
+          title={titleSelected}
+          sessions={selectedDay.sessions}
+          earned={selectedDay.earned}
+          hours={selectedDay.hours}
+        />
         <StatRow
           title="Cette semaine"
           sessions={week.sessions}
@@ -210,6 +232,8 @@ export default function Home() {
           hours={month.hours}
         />
       </div>
+
+      <GoogleAd className="mx-2 mt-6" />
 
       {/* classement */}
       <section className="mt-4">

@@ -1,4 +1,14 @@
-// client qui JETTE (inchangé)
+// api.js
+
+const RAW_BASE = import.meta?.env?.VITE_API_URL ?? "http://localhost:3333";
+// retire tous les / de fin (http://x:3333//// -> http://x:3333)
+const BASE = RAW_BASE.replace(/\/+$/, ""); // peut être '' si tu veux du relatif
+
+function joinUrl(base, path) {
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${p}`;
+}
+
 export async function api(
   path,
   { method = "GET", body, headers: extraHeaders } = {}
@@ -10,17 +20,16 @@ export async function api(
   if (!isForm) headers["Content-Type"] = "application/json";
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const res = await fetch(
-    (import.meta?.env?.VITE_API_URL || "http://localhost:3333") + path,
-    {
-      method,
-      headers,
-      body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
-    }
-  );
+  const url = joinUrl(BASE || "", path); // si BASE === '' => requête relative
+
+  const res = await fetch(url, {
+    method,
+    headers,
+    body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
+    // credentials: 'include', // ← active seulement si tu passes sur cookies
+  });
 
   const ct = res.headers.get("content-type") || "";
-  // ✅ petit plus: gérer 204 No Content proprement
   const payload =
     res.status === 204
       ? null
@@ -43,7 +52,6 @@ export const Auth = {
   login: (email, password) =>
     api("/login", { method: "POST", body: { email, password } }),
   register: (payload) => api("/signup", { method: "POST", body: payload }),
-
   logout: () => api("/logout", { method: "POST" }),
   getSessions: () => api("/sessions", { method: "GET" }),
   me: (token) =>
