@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/hooks"; // handled by the layout
 
 import { User } from "@/api";
-import { MesSessions } from "@/pages/SettingsComponents";
+import { MesSessions, ConfidentialitePermissions } from "@/pages/SettingsComponents";
 import { openPrintWindow } from "@/utils";
 import { useAuthContext } from "@/context/AuthContext";
 
@@ -15,6 +15,7 @@ export default function Settings() {
   const [username, setUsername] = useState(user?.username ?? "");
   const [saving, setSaving] = useState(false);
   const [isSessionsModalOpen, setIsSessionsModalOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isConfirmingReset, setIsConfirmingReset] = useState(false);
 
@@ -159,7 +160,13 @@ export default function Settings() {
             </li>
 
             <li className="text-poopay-text/90">
-              Confidentialite et permissions
+              <button
+                type="button"
+                onClick={() => setIsPrivacyModalOpen(true)}
+                className="w-full text-left text-poopay-text/90 hover:text-poopay-text hover:underline transition"
+              >
+                Confidentialite et permissions
+              </button>
             </li>
             <li className="text-poopay-text/90">Gerer l'abonnement</li>
           </ul>
@@ -187,6 +194,10 @@ export default function Settings() {
         <MesSessions
           isOpen={isSessionsModalOpen}
           onClose={() => setIsSessionsModalOpen(false)}
+        />
+        <ConfidentialitePermissions
+          isOpen={isPrivacyModalOpen}
+          onClose={() => setIsPrivacyModalOpen(false)}
         />
       </div>
 
