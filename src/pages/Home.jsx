@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { DayPills } from "@/components";
+import { DayPills, GoogleAd } from "@/components";
 import { HomeFetch } from "@/api";
 
 // utils format
@@ -210,6 +210,8 @@ export default function Home() {
           hours={month.hours}
         />
       </div>
+
+      <GoogleAd className="mx-2 mt-6" />
 
       {/* classement */}
       <section className="mt-4">
