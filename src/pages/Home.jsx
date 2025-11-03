@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { DayPills, GoogleAd } from "@/components";
 import { HomeFetch } from "@/api";
@@ -60,11 +60,36 @@ export default function Home() {
     return arr;
   }, []);
 
-  // ✨ carte stats (Sessions / Gagné / Temps passé)
-  function StatRow({ title, sessions, earned, hours }) {
+  // ⌨️ clavier sur la strip de jours
+  const onDaysKeyDown = useCallback((e) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      setActiveIndex((i) => Math.max(0, i - 1));
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      setActiveIndex((i) => Math.min(6, i + 1));
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setActiveIndex(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setActiveIndex(6);
+    }
+  }, []);
+
+  function StatRow({ title, sessions, earned, hours, id }) {
     return (
-      <section className="mb-4">
-        <h3 className="px-4 mb-2 text-[15px] font-semibold text-poopay-text">
+      <section
+        id={id}
+        role="region"
+        aria-labelledby={`${id}-title`}
+        className="mb-4 outline-none focus-visible:ring-2 focus-visible:ring-poopay-pill focus-visible:ring-offset-2 focus-visible:ring-offset-poopay-bg rounded-2xl"
+        tabIndex={0}
+      >
+        <h3
+          id={`${id}-title`}
+          className="px-4 mb-2 text-[15px] font-semibold text-poopay-text"
+        >
           {title}
         </h3>
         <div className="mx-2 rounded-3xl bg-poopay-card shadow-soft px-5 py-6">
@@ -95,11 +120,13 @@ export default function Home() {
     );
   }
 
-  // item classement
   function RankItem({ left, right, medal }) {
     const medalEmoji = { 1: "🥇", 2: "🥈", 3: "🥉" }[medal] ?? "🏅";
     return (
-      <div className="mx-2 mb-3 rounded-3xl bg-poopay-card shadow-soft px-5 py-4 flex items-center justify-between">
+      <div
+        className="mx-2 mb-3 rounded-3xl bg-poopay-card shadow-soft px-5 py-4 flex items-center justify-between outline-none focus-visible:ring-2 focus-visible:ring-poopay-pill focus-visible:ring-offset-2 focus-visible:ring-offset-poopay-bg"
+        tabIndex={0}
+      >
         <div className="text-poopay-text/90">{left}</div>
         <div className="text-poopay-text/90">
           {right} <span className="ml-1">{medalEmoji}</span>
@@ -139,7 +166,6 @@ export default function Home() {
     };
   }, [data, days, activeIndex]);
 
-  // Cette semaine (lundi → maintenant) inchangé
   const week = useMemo(() => {
     if (!data) return { sessions: 0, earned: 0, hours: 0 };
     const now = new Date();
@@ -204,91 +230,126 @@ export default function Home() {
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-poopay-bg pb-24">
-      {/* strip de jours */}
-      <DayPills
-        days={days}
-        activeIndex={activeIndex}
-        setActiveIndex={setActiveIndex}
-      />
+      {/* Skip link */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 bg-poopay-card text-poopay-text px-3 py-2 rounded-lg shadow-soft"
+      >
+        Aller au contenu principal
+      </a>
 
-      {/* blocs stats */}
-      <div className="mt-4">
-        <StatRow
-          title={titleSelected}
-          sessions={selectedDay.sessions}
-          earned={selectedDay.earned}
-          hours={selectedDay.hours}
-        />
-        <StatRow
-          title="Cette semaine"
-          sessions={week.sessions}
-          earned={week.earned}
-          hours={week.hours}
-        />
-        <StatRow
-          title="Ce mois-ci"
-          sessions={month.sessions}
-          earned={month.earned}
-          hours={month.hours}
+      {/* strip de jours : focusable + clavier */}
+      <div
+        role="group"
+        aria-label="Choix du jour"
+        aria-describedby="days-help"
+        tabIndex={0}
+        onKeyDown={onDaysKeyDown}
+        className="outline-none focus-visible:ring-2 focus-visible:ring-poopay-pill focus-visible:ring-offset-2 focus-visible:ring-offset-poopay-bg rounded-2xl"
+      >
+        <p id="days-help" className="sr-only">
+          Utilisez Flèche gauche/droite, Home et End pour changer de jour.
+        </p>
+        <DayPills
+          days={days}
+          activeIndex={activeIndex}
+          setActiveIndex={setActiveIndex}
         />
       </div>
 
-      <GoogleAd className="mx-2 mt-6" />
+      {/* zone principale */}
+      <main id="main">
+        {/* blocs stats */}
+        <div className="mt-4">
+          <StatRow
+            id="stats-today"
+            title={titleSelected}
+            sessions={selectedDay.sessions}
+            earned={selectedDay.earned}
+            hours={selectedDay.hours}
+          />
+          <StatRow
+            id="stats-week"
+            title="Cette semaine"
+            sessions={week.sessions}
+            earned={week.earned}
+            hours={week.hours}
+          />
+          <StatRow
+            id="stats-month"
+            title="Ce mois-ci"
+            sessions={month.sessions}
+            earned={month.earned}
+            hours={month.hours}
+          />
+        </div>
 
-      {/* classement */}
-      <section className="mt-4">
-        <h3 className="px-4 mb-2 text-[15px] font-semibold text-poopay-text">
-          Classement de la semaine
-        </h3>
+        <GoogleAd className="mx-2 mt-6" />
 
-        {data.groups.map((group) => (
-          <div
-            key={group.id}
-            className="mx-2 mb-4 rounded-3xl bg-poopay-card shadow-soft px-5 py-5"
+        {/* classement */}
+        <section className="mt-4" aria-labelledby="rank-title">
+          <h3
+            id="rank-title"
+            className="px-4 mb-2 text-[15px] font-semibold text-poopay-text"
           >
-            <div className="mb-3">
-              <h4 className="text-poopay-text font-semibold text-[15px]">
-                {group.name}
-              </h4>
-              {/* Position du user */}
-              <div className="text-[13px] text-poopay-mute mt-3">
-                Ta position :{" "}
-                {group.userPlace ? (
-                  <span className="text-poopay-text font-medium">
-                    {group.userPlace}ᵉ
-                  </span>
-                ) : (
-                  "—"
-                )}
+            Classement de la semaine
+          </h3>
+
+          {data.groups.map((group) => (
+            <div
+              key={group.id}
+              role="region"
+              aria-labelledby={`group-${group.id}-title`}
+              tabIndex={0}
+              className="mx-2 mb-4 rounded-3xl bg-poopay-card shadow-soft px-5 py-5 outline-none focus-visible:ring-2 focus-visible:ring-poopay-pill focus-visible:ring-offset-2 focus-visible:ring-offset-poopay-bg"
+            >
+              <div className="mb-3">
+                <h4
+                  id={`group-${group.id}-title`}
+                  className="text-poopay-text font-semibold text-[15px]"
+                >
+                  {group.name}
+                </h4>
+                <div className="text-[13px] text-poopay-mute mt-3">
+                  Ta position :{" "}
+                  {group.userPlace ? (
+                    <span className="text-poopay-text font-medium">
+                      {group.userPlace}ᵉ
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {group.members.map((m, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center text-[15px] text-poopay-text/90"
+                  >
+                    <span>
+                      {i === 0 && "🥇 "}
+                      {i === 1 && "🥈 "}
+                      {i === 2 && "🥉 "}
+                      <span>{m.username}</span>
+                    </span>
+                    <span className="text-poopay-text/80">
+                      {m.totalEarned.toFixed(2)} €
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
+          ))}
 
-            {/* Top 3 membres du groupe */}
-            <div className="space-y-2">
-              {group.members.map((m, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center text-[15px] text-poopay-text/90"
-                >
-                  <span>
-                    {i === 0 && "🥇 "}
-                    {i === 1 && "🥈 "}
-                    {i === 2 && "🥉 "}
-                    <span>{m.username}</span>
-                  </span>
-                  <span className="text-poopay-text/80">
-                    {m.totalEarned.toFixed(2)} €
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {data.groups.length === 0 && (
-          <p className="px-4 text-poopay-mute">Aucun groupe pour le moment.</p>
-        )}
-      </section>
+          {data.groups.length === 0 && (
+            <p className="px-4 text-poopay-mute">
+              Aucun groupe pour le moment.
+            </p>
+          )}
+        </section>
+      </main>
 
       {/* footer */}
       <div className="text-center text-[12px] text-poopay-mute mt-6">

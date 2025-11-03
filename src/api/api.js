@@ -11,7 +11,7 @@ function joinUrl(base, path) {
 
 export async function api(
   path,
-  { method = "GET", body, headers: extraHeaders } = {}
+  { method = "GET", body, headers: extraHeaders, raw = false } = {}
 ) {
   const token = localStorage.getItem("access_token") || "";
   const isForm = body instanceof FormData;
@@ -20,13 +20,11 @@ export async function api(
   if (!isForm) headers["Content-Type"] = "application/json";
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const url = joinUrl(BASE || "", path); // si BASE === '' => requête relative
-
+  const url = joinUrl(BASE || "", path); 
   const res = await fetch(url, {
     method,
     headers,
     body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
-    // credentials: 'include', // ← active seulement si tu passes sur cookies
   });
 
   const ct = res.headers.get("content-type") || "";
@@ -44,7 +42,7 @@ export async function api(
   if (payload && payload.result === false) {
     throw new Error(payload.message || "Erreur");
   }
-  return payload?.data ?? payload;
+  return raw ? payload : payload?.data ?? payload;
 }
 
 /* Endpoints */
@@ -79,9 +77,34 @@ export const SessionsFetch = {
 };
 
 export const ClassementFetch = {
-  getStats: (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    return api(`/rankings${query ? "?" + query : ""}`, { method: "GET" });
+  getStats: async (params = {}) => {
+    // Normalise les paramètres: mappe (mode, filter) vers (region|category)
+    const { mode, filter, ...rest } = params || {};
+    const queryObj = { ...rest };
+    if (typeof filter !== "undefined" && filter !== null && filter !== "") {
+      if (mode === "region") queryObj.region = filter;
+      else if (mode === "category") queryObj.category = filter;
+      else queryObj.filter = filter;
+    }
+    if (mode) queryObj.mode = mode;
+    const query = new URLSearchParams(queryObj).toString();
+    const payload = await api(`/rankings${query ? "?" + query : ""}`, {
+      method: "GET",
+      raw: true,
+    });
+
+    // Normalise la forme de retour pour le front
+    const list = Array.isArray(payload?.data)
+      ? payload.data
+      : Array.isArray(payload?.rankings)
+      ? payload.rankings
+      : Array.isArray(payload?.classementData)
+      ? payload.classementData
+      : Array.isArray(payload)
+      ? payload
+      : [];
+
+    return { dataUser: payload?.dataUser, data: list };
   },
 };
 

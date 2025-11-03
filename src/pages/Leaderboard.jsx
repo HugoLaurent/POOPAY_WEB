@@ -22,6 +22,7 @@ export default function Leaderboard() {
   const [topUsers, setTopUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  console.log(topUsers);
 
   // 1️⃣ Bootstrap : récupère dataUser et premier classement
   useEffect(() => {
@@ -32,13 +33,14 @@ export default function Leaderboard() {
       try {
         const res = await ClassementFetch.getStats();
 
-        // Valeurs par défaut issues de dataUser
         const du = res?.dataUser;
         const nextDefaults = {
           region: du?.userRegion ? String(du.userRegion) : "",
           category: du?.userCategoryId ? String(du.userCategoryId) : "",
         };
-        if (alive) setDefaults(nextDefaults);
+        if (alive && (nextDefaults.region || nextDefaults.category)) {
+          setDefaults(nextDefaults);
+        }
 
         // Définit le mode et filtre initiaux
         if (alive && !filter) {
@@ -52,13 +54,7 @@ export default function Leaderboard() {
         }
 
         // Premier classement (si renvoyé par l'API)
-        const list = Array.isArray(res?.data)
-          ? res.data
-          : Array.isArray(res?.rankings)
-          ? res.rankings
-          : Array.isArray(res?.classementData)
-          ? res.classementData
-          : [];
+        const list = res?.data;
         if (alive) setTopUsers(list);
       } catch {
         if (alive) setError("Impossible de charger les classements.");
@@ -83,13 +79,7 @@ export default function Leaderboard() {
       setError("");
       try {
         const res = await ClassementFetch.getStats({ mode, filter });
-        const list = Array.isArray(res?.data)
-          ? res.data
-          : Array.isArray(res?.rankings)
-          ? res.rankings
-          : Array.isArray(res?.classementData)
-          ? res.classementData
-          : [];
+        const list = Array.isArray(res?.data) ? res.data : [];
         if (alive) setTopUsers(list);
       } catch {
         if (alive) setError("Impossible de charger les classements.");
@@ -132,19 +122,19 @@ export default function Leaderboard() {
             </p>
           ) : (
             <ul className="space-y-2">
-              {topUsers.map((u, idx) => (
+              {topUsers.map((user, idx) => (
                 <li
-                  key={`${u.id ?? u.username ?? idx}-${idx}`}
+                  key={`${user.id ?? user.username ?? idx}-${idx}`}
                   className="mx-3 mt-3 rounded-3xl bg-poopay-card shadow-soft px-5 py-4 flex items-center"
                 >
-                  <span className="w-8 font-bold text-poopay-mute">
-                    {u.rank ?? idx + 1}.
+                  <span className="w-8 font-bold text-black">
+                    {user.rank ?? idx + 1}.
                   </span>
                   <span className="flex-1 ml-2 font-semibold text-poopay-text truncate">
-                    {u.username ?? u.name ?? "—"}
+                    {user.username ?? user.name ?? "—"}
                   </span>
                   <span className="ml-3 font-semibold text-poopay-text">
-                    {fmtEuro(Number(u.totalEarned ?? 0))}
+                    {fmtEuro(Number(user.totalEarned ?? 0))}
                   </span>
                 </li>
               ))}
