@@ -4,9 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/hooks"; // handled by the layout
 
 import { User } from "@/api";
-import { MesSessions, ConfidentialitePermissions } from "@/pages/SettingsComponents";
+import {
+  MesSessions,
+  ConfidentialitePermissions,
+  SubscriptionManager,
+} from "@/pages/SettingsComponents";
 import { openPrintWindow } from "@/utils";
 import { useAuthContext } from "@/context/AuthContext";
+import SimpleModal from "@/components/SimpleModal.jsx";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -18,6 +23,7 @@ export default function Settings() {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isConfirmingReset, setIsConfirmingReset] = useState(false);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   useEffect(() => {
     setUsername(user?.username ?? "");
@@ -84,6 +90,25 @@ export default function Settings() {
 
       {/* Carte principale */}
       <div className="mx-3 mt-3 rounded-3xl bg-poopay-card  px-5 py-5">
+        <div className="mb-4 rounded-2xl border border-poopay-card/60 bg-poopay-card/80 px-4 py-3 text-sm text-poopay-text/80 shadow-inner">
+          {user?.isPremium ? (
+            <p>
+              <span className="font-semibold text-poopay-text">
+                Abonnement premium actif.
+              </span>{" "}
+              Tu peux cr&eacute;er des groupes jusqu'&agrave; 10 membres.
+            </p>
+          ) : (
+            <p>
+              Passe en{" "}
+              <span className="font-semibold text-poopay-text">
+                premium
+              </span>{" "}
+              pour enlever la limite de 3 membres par groupe et montrer une
+              d&eacute;mo de paiement dans ton m&eacute;moire.
+            </p>
+          )}
+        </div>
         {/* Nom d'utilisateur */}
         <div className="mb-4">
           <label className="block text-[13px] font-medium text-poopay-mute mb-1">
@@ -168,7 +193,15 @@ export default function Settings() {
                 Confidentialite et permissions
               </button>
             </li>
-            <li className="text-poopay-text/90">Gerer l'abonnement</li>
+            <li className="text-poopay-text/90">
+              <button
+                type="button"
+                onClick={() => setIsSubscriptionModalOpen(true)}
+                className="w-full text-left text-poopay-text/90 hover:text-poopay-text hover:underline transition"
+              >
+                Gerer mon abonnement (Stripe test)
+              </button>
+            </li>
           </ul>
         </div>
 
@@ -199,6 +232,31 @@ export default function Settings() {
           isOpen={isPrivacyModalOpen}
           onClose={() => setIsPrivacyModalOpen(false)}
         />
+        <SimpleModal
+          isOpen={isSubscriptionModalOpen}
+          onClose={() => setIsSubscriptionModalOpen(false)}
+          className="rounded-t-3xl"
+        >
+          <div className="relative px-5 py-6 space-y-6">
+            <button
+              type="button"
+              onClick={() => setIsSubscriptionModalOpen(false)}
+              className="absolute right-4 top-4 rounded-full bg-poopay-card/70 px-3 py-1 text-xs font-semibold text-poopay-text/80 hover:text-poopay-text transition"
+            >
+              Fermer
+            </button>
+            <header className="space-y-1 pr-16">
+              <h2 className="text-xl font-semibold text-poopay-text">
+                Gestion de l'abonnement premium
+              </h2>
+              <p className="text-sm text-poopay-text/70">
+                Paiement en mode test uniquement. Utilise la carte 4242 4242 4242 4242 pour activer le
+                premium sur ton compte.
+              </p>
+            </header>
+            <SubscriptionManager />
+          </div>
+        </SimpleModal>
       </div>
 
       {isConfirmingReset && (

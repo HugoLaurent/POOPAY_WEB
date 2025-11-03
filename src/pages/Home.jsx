@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { DayPills, GoogleAd } from "@/components";
 import { HomeFetch } from "@/api";
+import { useAuthContext } from "@/context/AuthContext";
 
 const fmtH = (h) => `${h.toFixed(1)}h`;
 const euro = (n) =>
@@ -29,6 +30,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
+  const { user } = useAuthContext();
 
   // 0..6 où 6 === aujourd'hui
   const [activeIndex, setActiveIndex] = useState(6);
@@ -284,7 +286,7 @@ export default function Home() {
           />
         </div>
 
-        <GoogleAd className="mx-2 mt-6" />
+        {!user.isPremium && <GoogleAd className="mx-2 mt-6" />}
 
         {/* classement */}
         <section className="mt-4" aria-labelledby="rank-title">

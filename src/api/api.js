@@ -135,3 +135,10 @@ export const NotificationsFetch = {
   remove: (notificationId) =>
     api(`/notifications/${notificationId}`, { method: "DELETE" }),
 };
+
+export const PaymentsFetch = {
+  list: () => api("/payments", { method: "GET" }),
+  createIntent: (payload) =>
+    api("/payments/intent", { method: "POST", body: payload }),
+  sync: (paymentId) => api(`/payments/${paymentId}/sync`, { method: "POST" }),
+};
