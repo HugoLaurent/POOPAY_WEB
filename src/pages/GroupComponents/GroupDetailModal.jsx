@@ -122,14 +122,14 @@ export default function GroupDetailModal({
                   Membres : {memberCount}/{group?.max_members ?? 0}
                 </span>
                 {group?.createdAt && createdDate && (
-                  <span>cree le {createdDate}</span>
+                  <span>Créé le {createdDate}</span>
                 )}
                 {group?.winnerLastMonth?.name && (
                   <span>
                     Gagnant du mois dernier : {group.winnerLastMonth.name}
                   </span>
                 )}
-                {group?.category && <span>Categorie : {group.category}</span>}
+                {group?.category && <span>Catégorie : {group.category}</span>}
               </div>
             </div>
             <button
@@ -158,7 +158,7 @@ export default function GroupDetailModal({
               disabled={isAdmin || leaveLoading}
               className="w-full rounded-xl border border-black/10 bg-poopay-card px-4 py-3 text-sm font-semibold text-poopay-text transition hover:bg-poopay-card/80 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {leaveLoading ? "Quitte..." : "Quitter le groupe"}
+              {leaveLoading ? "Départ..." : "Quitter le groupe"}
             </button>
           </div>
           {leaveError && (
@@ -200,12 +200,12 @@ export default function GroupDetailModal({
 
           <div className="space-y-3">
             <label className="block text-sm font-medium text-poopay-text">
-              Email du membre
+              E-mail du membre
               <input
                 value={inviteEmail}
                 onChange={(event) => setInviteEmail(event.target.value)}
                 type="email"
-                placeholder="email@example.com"
+                placeholder="prenom.nom@example.com"
                 className="mt-1 w-full rounded-xl border border-black/10 bg-poopay-card/60 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
                 disabled={inviteLoading}
               />
@@ -216,7 +216,7 @@ export default function GroupDetailModal({
                 value={inviteMessage}
                 onChange={(event) => setInviteMessage(event.target.value)}
                 rows={3}
-                placeholder="Ajoute un message pour ton invite"
+                placeholder="Ajoute un message pour ton invité"
                 className="mt-1 w-full rounded-xl border border-black/10 bg-poopay-card/60 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
                 disabled={inviteLoading}
               />

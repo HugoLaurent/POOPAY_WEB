@@ -19,7 +19,7 @@ export default function Header() {
   return (
     <header className="pt-4 px-5 max-w-3xl mx-auto w-full">
       <div className="max-w-3xl mx-auto">
-        {/* Title row with centered text and notification button on the right */}
+        {/* Ligne de titre centrée avec le bouton de notifications à droite */}
         <div className="grid grid-cols-3 items-start">
           <div />
 
@@ -50,15 +50,15 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Leaderboard banner */}
+        {/* Bandeau du classement */}
         {pathname === "/leaderboard" && (
           <div className="mt-4 flex flex-col items-center text-center">
             <h2 className="text-xl font-bold mb-1 text-[#8B4513]">
               Classements
             </h2>
             <p className="text-sm opacity-90 max-w-[38ch] text-[rgb(90,62,40)]">
-              Compare les meilleurs groupes par region ou par categorie de
-              travail
+              Compare les meilleurs groupes par région ou par catégorie de
+              travail.
             </p>
           </div>
         )}

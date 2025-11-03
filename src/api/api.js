@@ -47,7 +47,7 @@ export async function api(
   return raw ? payload : payload?.data ?? payload;
 }
 
-/* Endpoints */
+/* Points de terminaison */
 export const Auth = {
   login: (email, password) =>
     api("/login", { method: "POST", body: { email, password } }),
@@ -82,7 +82,7 @@ export const SessionsFetch = {
 
 export const ClassementFetch = {
   getStats: async (params = {}) => {
-    // Normalise les paramètres: mappe (mode, filter) vers (region|category)
+    // Normalise les paramètres : associe (mode, filtre) à (région | catégorie)
     const { mode, filter, ...rest } = params || {};
     const queryObj = { ...rest };
     if (typeof filter !== "undefined" && filter !== null && filter !== "") {
@@ -97,7 +97,7 @@ export const ClassementFetch = {
       raw: true,
     });
 
-    // Normalise la forme de retour pour le front
+    // Normalise la forme de retour pour le front-end
     const list = Array.isArray(payload?.data)
       ? payload.data
       : Array.isArray(payload?.rankings)

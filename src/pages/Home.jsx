@@ -62,7 +62,7 @@ export default function Home() {
     return arr;
   }, []);
 
-  // ⌨️ clavier sur la strip de jours
+  // ⌨️ Navigation clavier sur la frise de jours
   const onDaysKeyDown = useCallback((e) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -232,7 +232,7 @@ export default function Home() {
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-poopay-bg pb-24">
-      {/* Skip link */}
+      {/* Lien d'évitement */}
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 bg-poopay-card text-poopay-text px-3 py-2 rounded-lg shadow-soft"
@@ -240,7 +240,7 @@ export default function Home() {
         Aller au contenu principal
       </a>
 
-      {/* strip de jours : focusable + clavier */}
+      {/* Frise de jours : focusable + clavier */}
       <div
         role="group"
         aria-label="Choix du jour"
