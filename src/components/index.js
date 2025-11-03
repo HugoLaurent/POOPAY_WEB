@@ -7,6 +7,7 @@ export { default as Footer } from "./Footer.jsx";
 export { default as Header } from "./Header.jsx";
 export { default as GoogleAd } from "./GoogleAd.jsx";
 export { default as NotificationsModal } from "./NotificationsModal.jsx";
+export { default as CookieConsent } from "./CookieConsent.jsx";
 export { default as SimpleModal } from "./SimpleModal.jsx";
 export { TabLink } from "./TabLink.jsx";
 export { default as Toast } from "./Toast.jsx";

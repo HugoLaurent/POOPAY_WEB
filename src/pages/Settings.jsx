@@ -101,11 +101,8 @@ export default function Settings() {
           ) : (
             <p>
               Passe en{" "}
-              <span className="font-semibold text-poopay-text">
-                premium
-              </span>{" "}
-              pour enlever la limite de 3 membres par groupe et montrer une
-              d&eacute;mo de paiement dans ton m&eacute;moire.
+              <span className="font-semibold text-poopay-text">premium</span>{" "}
+              pour enlever la limite de 3 membres par groupe.
             </p>
           )}
         </div>
@@ -250,8 +247,8 @@ export default function Settings() {
                 Gestion de l'abonnement premium
               </h2>
               <p className="text-sm text-poopay-text/70">
-                Paiement en mode test uniquement. Utilise la carte 4242 4242 4242 4242 pour activer le
-                premium sur ton compte.
+                Paiement en mode test uniquement. Utilise la carte 4242 4242
+                4242 4242 pour activer le premium sur ton compte.
               </p>
             </header>
             <SubscriptionManager />

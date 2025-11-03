@@ -286,7 +286,7 @@ export default function Home() {
           />
         </div>
 
-        {!user.isPremium && <GoogleAd className="mx-2 mt-6" />}
+        {user && !user.isPremium && <GoogleAd className="mx-2 mt-6" />}
 
         {/* classement */}
         <section className="mt-4" aria-labelledby="rank-title">

@@ -73,6 +73,8 @@ export const HomeFetch = {
 
 export const SessionsFetch = {
   getSessions: () => api("/sessions", { method: "GET" }),
+  createSession: (payload) =>
+    api("/sessions", { method: "POST", body: payload }),
   deleteSession: (sessionId) =>
     api(`/sessions/${sessionId}`, { method: "DELETE" }),
   deleteAllSessions: () => api(`/sessions`, { method: "DELETE" }),

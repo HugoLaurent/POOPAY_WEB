@@ -1,149 +1,223 @@
 import { SimpleModal } from "@/components";
+import { Globe, Save, ShieldCheck, Lock } from "lucide-react";
 
-const SUPPORT_EMAIL = "support@poopay.app";
+const SUPPORT_EMAIL = "privacy@poopay.app";
+
+const DATA_POINTS = [
+  "Identifiants de compte (email, nom d'utilisateur)",
+  "Statistiques d'utilisation (sessions, durées, classements)",
+  "Préférences enregistrées dans l'application",
+  "Données de groupes et invitations",
+];
+
+const DATA_USAGE = [
+  "Fournir les fonctionnalités Poopay (groupes, classements, sessions)",
+  "Assurer la sécurité, la modération et la lutte contre la fraude",
+  "Améliorer l'expérience utilisateur à partir de statistiques agrégées",
+  "Analyser le trafic du site (mesure d’audience anonyme)",
+];
+
+const RIGHTS_LIST = [
+  "Droit d'accès et de rectification",
+  "Droit à l'effacement (droit à l'oubli)",
+  "Droit à la portabilité",
+  "Droit d'opposition à certains traitements",
+];
+
+function openContact() {
+  if (typeof window === "undefined") return;
+  window.location.href = `mailto:${SUPPORT_EMAIL}`;
+}
 
 export default function ConfidentialitePermissions({ isOpen, onClose }) {
-  const handleContact = () => {
-    const mailtoLink = `mailto:${SUPPORT_EMAIL}`;
-    if (typeof window !== "undefined") {
-      window.location.href = mailtoLink;
-    }
-  };
-
   return (
     <SimpleModal
       isOpen={isOpen}
       onClose={onClose}
-      className="rounded-t-3xl"
       closeOnBackdrop
+      className="rounded-t-3xl"
     >
-      <div className="p-6 space-y-6 text-sm text-poopay-text/90">
+      <div className="max-h-[85vh] overflow-y-auto px-6 py-7 text-sm text-poopay-text/90 space-y-8">
         <header className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-poopay-text">
+            <div className="flex items-center gap-2 text-poopay-active">
+              <Lock size={16} />
+              <span className="text-xs font-semibold uppercase tracking-[0.28em]">
+                Sécurité
+              </span>
+            </div>
+            <h2 className="mt-2 text-xl font-semibold text-poopay-text">
               Confidentialité & permissions
             </h2>
-            <p className="text-xs text-poopay-mute mt-1">
-              Ce rappel reprend nos engagements, vos droits et les bonnes
-              pratiques à suivre pour utiliser Poopay sereinement.
+            <p className="mt-2 text-xs leading-relaxed text-poopay-mute">
+              Voici comment Poopay protège tes données sur le Web, quelles
+              autorisations sont sollicitées et comment les contrôler depuis ton
+              navigateur.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-xs font-medium text-poopay-mute hover:text-poopay-text transition"
+            className="text-xs font-medium text-poopay-mute transition hover:text-poopay-text"
           >
             Fermer
           </button>
         </header>
 
-        <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-poopay-text">
-            Règles d'utilisation
+        <section className="space-y-4">
+          <h3 className="text-lg font-semibold text-poopay-text">
+            🔒 Politique de confidentialité
           </h3>
-          <ul className="space-y-2">
-            <li className="rounded-2xl bg-poopay-card/80 px-4 py-3">
-              Utilise l'application de manière responsable : pas de partage de
-              contenus offensants ou discriminatoires, ni de tentative
-              d'accès non autorisé.
+          <p className="leading-relaxed">
+            Poopay respecte ta vie privée et collecte uniquement les
+            informations indispensables à l’usage du site. Les données sont
+            hébergées en Europe, chiffrées en transit et jamais revendues ou
+            utilisées pour du ciblage publicitaire.
+          </p>
+          <div className="rounded-3xl border border-poopay-card/70 bg-poopay-card/70 p-4 shadow-soft">
+            <h4 className="text-sm font-semibold text-poopay-text">
+              Données collectées
+            </h4>
+            <ul className="mt-2 space-y-1 text-sm text-poopay-text/80">
+              {DATA_POINTS.map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span className="mt-0.5 text-poopay-active">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-3xl border border-poopay-card/70 bg-poopay-card/70 p-4 shadow-soft">
+            <h4 className="text-sm font-semibold text-poopay-text">
+              Utilisation des données
+            </h4>
+            <ul className="mt-2 space-y-1 text-sm text-poopay-text/80">
+              {DATA_USAGE.map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span className="mt-0.5 text-poopay-active">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h3 className="text-lg font-semibold text-poopay-text">
+            Partage des données
+          </h3>
+          <p className="leading-relaxed text-poopay-text/80">
+            Nous ne partageons tes informations personnelles que dans les cas
+            suivants :
+          </p>
+          <ul className="space-y-2 text-sm text-poopay-text/80">
+            <li className="rounded-2xl bg-poopay-card/70 px-4 py-3 shadow-soft">
+              Avec les membres de tes groupes pour afficher classements et
+              statistiques.
             </li>
-            <li className="rounded-2xl bg-poopay-card/80 px-4 py-3">
-              Respecte la confidentialité des autres utilisateurs. Les
-              informations affichées sont destinées à la communauté Poopay et ne
-              doivent pas être diffusées publiquement sans accord.
-            </li>
-            <li className="rounded-2xl bg-poopay-card/80 px-4 py-3">
-              Signale rapidement tout comportement inapproprié ou toute faille
-              potentielle afin que nous puissions agir.
+            <li className="rounded-2xl bg-poopay-card/70 px-4 py-3 shadow-soft">
+              Avec les autorités compétentes si la loi nous l'impose.
             </li>
           </ul>
+          <p className="text-xs text-poopay-mute">
+            Tes informations ne sont jamais revendues ni utilisées pour du
+            ciblage publicitaire.
+          </p>
         </section>
 
         <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-poopay-text">
-            Protection des données
+          <h3 className="text-lg font-semibold text-poopay-text">
+            🔐 Permissions requises
           </h3>
-          <div className="space-y-2 leading-relaxed">
-            <p>
-              Les données recueillies servent uniquement à fournir les services
-              de Poopay (classements, suivi des défis, statistiques). Elles sont
-              stockées dans des environnements sécurisés, accessibles aux seules
-              équipes habilitées.
-            </p>
-            <p>
-              Tu conserves le contrôle sur tes informations : accède, exporte ou
-              supprime tes données à tout moment depuis les réglages ou en
-              contactant notre support. Nous respectons la réglementation
-              européenne en matière de protection des données (RGPD).
-            </p>
+          <p className="leading-relaxed text-poopay-text/80">
+            Certaines fonctionnalités de Poopay nécessitent des autorisations
+            spécifiques. Tu peux les ajuster à tout moment depuis les paramètres
+            de ton navigateur.
+          </p>
+          <div className="space-y-3">
+            <PermissionCard
+              icon={<Globe size={20} />}
+              title="Accès Internet"
+              description="Synchronisation des données et actualisation des classements en temps réel via notre API."
+              notes={[
+                "Indispensable pour le fonctionnement de Poopay",
+                "Certaines sections deviennent limitées sans connexion",
+              ]}
+            />
+            <PermissionCard
+              icon={<Save size={20} />}
+              title="Cookies & stockage local"
+              description="Enregistrement de tes préférences (thème, sessions) et mise en cache pour accélérer le chargement."
+              notes={[
+                "Tu peux vider ou bloquer ces données via les paramètres de confidentialité du navigateur",
+              ]}
+            />
           </div>
         </section>
 
         <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-poopay-text">
-            Utilisation sur ton lieu de travail
+          <h3 className="text-lg font-semibold text-poopay-text">
+            ⚖️ Tes droits (RGPD)
           </h3>
-          <div className="space-y-2 leading-relaxed">
-            <p>
-              Avant d'utiliser Poopay pendant tes heures de travail, vérifie les
-              politiques internes de ton entreprise. Certaines organisations
-              considèrent l'utilisation d'applications non professionnelles
-              comme une infraction disciplinaire.
-            </p>
-            <p>
-              L'application ne saurait être tenue responsable des sanctions
-              éventuelles liées à une utilisation en dehors du cadre autorisé
-              par ton employeur. Utilise-la idéalement pendant tes pauses ou en
-              dehors du temps de travail contractuel.
-            </p>
+          <div className="rounded-3xl border border-poopay-card/60 bg-poopay-card/50 p-4 shadow-soft">
+            <ul className="space-y-2 text-sm text-poopay-text/80">
+              {RIGHTS_LIST.map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <ShieldCheck size={16} className="mt-0.5 text-poopay-active" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
+          <p className="text-xs text-poopay-mute">
+            Tu peux exercer ces droits dans les réglages (“Mes données”) ou en
+            nous écrivant via le support.
+          </p>
         </section>
 
-        <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-poopay-text">
-            Santé, posture et pauses
-          </h3>
-          <div className="space-y-2 leading-relaxed">
-            <p>
-              Poopay n'est pas un dispositif médical. Écoute ton corps, fais des
-              pauses régulières et consulte un professionnel de santé en cas de
-              douleurs persistantes.
-            </p>
-            <p>
-              Adopte une posture adaptée : dos droit, épaules relâchées,
-              mouvements doux. Évite de rester assis trop longtemps sans te
-              lever ou t'étirer.
-            </p>
-          </div>
-        </section>
-
-        <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-poopay-text">
-            Besoin d'aide ?
-          </h3>
-          <div className="space-y-2 leading-relaxed">
-            <p>
-              Pour toute question juridique ou RH, rapproche-toi de ton service
-              interne. Pour toute demande liée à Poopay, utilise le canal de
-              support mis à ta disposition dans l'application.
-            </p>
-            <p className="text-xs text-poopay-mute">
-              En continuant à utiliser Poopay, tu confirmes avoir pris
-              connaissance de ces informations.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+        <section className="space-y-3 text-sm text-poopay-text/80">
+          <h3 className="text-lg font-semibold text-poopay-text">Contact</h3>
+          <p>
+            Une question ou un besoin spécifique concernant tes données ?
+            Écris-nous, notre équipe te répondra rapidement.
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={handleContact}
-              className="rounded-xl border border-[#8B4513] bg-[#8B4513] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#72380f]"
+              onClick={openContact}
+              className="rounded-xl border border-poopay-active px-4 py-2 text-sm font-semibold text-poopay-active transition hover:bg-poopay-active hover:text-white"
             >
-              Nous contacter
+              Contacter Poopay
             </button>
             <span className="text-xs text-poopay-mute">{SUPPORT_EMAIL}</span>
           </div>
+          <p className="text-xs text-poopay-mute">
+            Dernière mise à jour : 6 octobre 2025
+          </p>
         </section>
       </div>
     </SimpleModal>
+  );
+}
+
+function PermissionCard({ icon, title, description, notes }) {
+  return (
+    <div className="rounded-3xl border border-poopay-card/70 bg-poopay-card/60 p-4 shadow-soft">
+      <div className="flex items-center gap-3 text-poopay-text">
+        <span className="rounded-lg bg-poopay-card/90 p-2 text-poopay-active">
+          {icon}
+        </span>
+        <h4 className="text-sm font-semibold">{title}</h4>
+      </div>
+      <p className="mt-3 text-sm text-poopay-text/80">{description}</p>
+      <ul className="mt-3 space-y-1 text-xs text-poopay-text/70">
+        {notes.map((note) => (
+          <li key={note} className="flex gap-2">
+            <span className="text-poopay-active">•</span>
+            <span>{note}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
