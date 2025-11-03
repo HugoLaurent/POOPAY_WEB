@@ -2,7 +2,9 @@
 
 const RAW_BASE = import.meta?.env?.VITE_API_URL ?? "http://localhost:3333";
 // retire tous les / de fin (http://x:3333//// -> http://x:3333)
-const BASE = RAW_BASE.replace(/\/+$/, ""); // peut être '' si tu veux du relatif
+const BASE = RAW_BASE.replace(/\/+$/, "");
+
+export const API_BASE_URL = BASE || "";
 
 function joinUrl(base, path) {
   const p = path.startsWith("/") ? path : `/${path}`;
@@ -20,7 +22,7 @@ export async function api(
   if (!isForm) headers["Content-Type"] = "application/json";
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const url = joinUrl(BASE || "", path); 
+  const url = joinUrl(BASE || "", path);
   const res = await fetch(url, {
     method,
     headers,
@@ -115,4 +117,21 @@ export const GroupsFetch = {
   },
   createGroup: (payload) =>
     api("/groups/create", { method: "POST", body: payload }),
+  inviteMember: (groupId, payload) =>
+    api(`/groups/${groupId}/invitations`, { method: "POST", body: payload }),
+  respondInvitation: (invitationId, action) =>
+    api(`/group-invitations/${invitationId}/respond`, {
+      method: "POST",
+      body: { action },
+    }),
+  leaveGroup: (groupId) =>
+    api(`/groups/${groupId}/leave`, { method: "POST" }),
+};
+
+export const NotificationsFetch = {
+  list: () => api("/notifications", { method: "GET" }),
+  markRead: (notificationId) =>
+    api(`/notifications/${notificationId}/read`, { method: "POST" }),
+  remove: (notificationId) =>
+    api(`/notifications/${notificationId}`, { method: "DELETE" }),
 };

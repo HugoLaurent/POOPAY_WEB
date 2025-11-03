@@ -196,6 +196,22 @@ export default function Groups() {
         group={selectedGroup}
         isOpen={Boolean(selectedGroup)}
         onClose={() => setSelectedGroup(null)}
+        onInviteSuccess={(groupName) => {
+          setToast({
+            isOpen: true,
+            message: `Invitation envoyee pour "${groupName}".`,
+            variant: "success",
+          });
+        }}
+        onLeaveSuccess={async (groupName) => {
+          await refreshGroups();
+          setSelectedGroup(null);
+          setToast({
+            isOpen: true,
+            message: `Tu as quitte le groupe "${groupName}".`,
+            variant: "success",
+          });
+        }}
       />
 
       <SimpleModal
