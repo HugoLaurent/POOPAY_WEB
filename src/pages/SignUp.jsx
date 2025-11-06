@@ -9,6 +9,9 @@ import logo from "@/assets/logo/logoPoopay.png";
 import departements from "@/assets/data/departement.json";
 import categories from "@/assets/data/category.json";
 
+const CODE_VALIDITY_MINUTES = 10;
+const CODE_VALIDITY_MS = CODE_VALIDITY_MINUTES * 60 * 1000;
+
 export default function SignUp() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -34,6 +37,12 @@ export default function SignUp() {
     acceptedHealth: false,
     theme: "light",
   });
+  const [verification, setVerification] = useState({
+    codeSent: false,
+    expiresAt: null,
+    lastSentAt: null,
+  });
+  const [confirmationCode, setConfirmationCode] = useState("");
 
   // Si tu gères le thème système quelque part, synchronise ici
   useEffect(() => {
@@ -43,6 +52,15 @@ export default function SignUp() {
       window.matchMedia?.("(prefers-color-scheme: dark)").matches;
     setData((d) => ({ ...d, theme: prefersDark ? "dark" : "light" }));
   }, []);
+
+  useEffect(() => {
+    setVerification((prev) =>
+      prev.codeSent
+        ? { codeSent: false, expiresAt: null, lastSentAt: null }
+        : prev
+    );
+    setConfirmationCode("");
+  }, [data.email]);
 
   const filteredDepartments = useMemo(() => {
     if (!searchDept.trim()) return departements;
@@ -174,19 +192,72 @@ export default function SignUp() {
     };
   }
 
-  async function handleSubmit() {
+  async function requestVerificationCode() {
+    if (!data.email) {
+      setErr("Renseigne un email valide avant de demander la validation.");
+      return;
+    }
+    if (!data.username.trim()) {
+      setErr("Complète ton nom d'utilisateur avant de demander un code.");
+      return;
+    }
     setErr("");
     setIsLoading(true);
     try {
-      const payload = buildSignupPayload(data);
-      await Auth.register(payload);
+      const payload = { email: data.email, username: data.username.trim() };
+      const response = await Auth.requestSignupCode(payload);
+      const expiresAt =
+        response?.expiresAt ||
+        new Date(Date.now() + CODE_VALIDITY_MS).toISOString();
+      setVerification({
+        codeSent: true,
+        expiresAt,
+        lastSentAt: Date.now(),
+      });
+      setConfirmationCode("");
+    } catch (error) {
+      setErr(
+        error?.message ||
+          "Impossible d'envoyer le code de confirmation. Réessaie."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
+  async function finalizeSignupWithCode() {
+    const sanitizedCode = confirmationCode.trim();
+    if (!sanitizedCode) {
+      setErr("Saisis le code reçu par email pour finaliser l'inscription.");
+      return;
+    }
+    const expiresAtMs = verification.expiresAt
+      ? Date.parse(verification.expiresAt)
+      : null;
+    if (expiresAtMs && Date.now() > expiresAtMs) {
+      setErr("Le code a expiré. Renvoie un nouvel email de confirmation.");
+      return;
+    }
+
+    setErr("");
+    setIsLoading(true);
+    try {
+      const payload = { ...buildSignupPayload(data), code: sanitizedCode };
+      await Auth.confirmSignup(payload);
       navigate("/login");
     } catch (e) {
       setErr(e?.message || "Inscription impossible.");
     } finally {
       setIsLoading(false);
     }
+  }
+
+  async function handleSubmit() {
+    if (!verification.codeSent) {
+      await requestVerificationCode();
+      return;
+    }
+    await finalizeSignupWithCode();
   }
 
   const Progress = () => (
@@ -502,6 +573,73 @@ export default function SignUp() {
                   </span>
                 </label>
               </section>
+              <section className="bg-white rounded-2xl ring-1 ring-poopay-pill p-4 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="font-semibold text-poopay-text">
+                    Validation de ton email
+                  </h3>
+                  {verification.codeSent && (
+                    <span className="text-xs font-medium text-poopay-active bg-poopay-active/10 rounded-full px-3 py-1">
+                      Code envoyé
+                    </span>
+                  )}
+                </div>
+                {!verification.codeSent ? (
+                  <p className="text-sm text-poopay-text/80">
+                    Quand tu cliqueras sur « Créer mon compte », nous t'enverrons un
+                    code pour confirmer que tu es bien le titulaire de
+                    l'adresse <span className="font-semibold text-poopay-text">
+                      {data.email || "(ton email)"}
+                    </span>.
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-sm text-poopay-text/80">
+                      Un email vient d'être envoyé à
+                      <span className="font-semibold text-poopay-text">
+                        {' '}{data.email}
+                      </span>. Recopie le code à 6 chiffres ci-dessous pour valider ton
+                      inscription.
+                    </p>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={confirmationCode}
+                      onChange={(e) =>
+                        setConfirmationCode(
+                          e.target.value.replace(/\\D/g, "").slice(0, 6)
+                        )
+                      }
+                      disabled={isLoading}
+                      placeholder="Code reçu par email"
+                      className="w-full text-center tracking-[0.6rem] text-lg font-semibold rounded-2xl bg-poopay-active/10 text-poopay-text placeholder:text-poopay-mute px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition"
+                    />
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-poopay-text/70">
+                      <button
+                        type="button"
+                        className="text-poopay-active font-semibold hover:underline disabled:opacity-50"
+                        onClick={requestVerificationCode}
+                        disabled={isLoading}
+                      >
+                        Renvoyer un code
+                      </button>
+                      <span>
+                        {verification.expiresAt
+                          ? `Expire le ${new Date(
+                              verification.expiresAt
+                            ).toLocaleString("fr-FR", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}`
+                          : `Code valable ${CODE_VALIDITY_MINUTES} min après l'envoi.`}
+                      </span>
+                    </div>
+                  </>
+                )}
+              </section>
             </div>
           )}
 
@@ -533,7 +671,7 @@ export default function SignUp() {
                   Chargement…
                 </span>
               ) : step === 5 ? (
-                "Créer mon compte"
+                verification.codeSent ? "Valider mon code" : "Créer mon compte"
               ) : (
                 "Suivant"
               )}

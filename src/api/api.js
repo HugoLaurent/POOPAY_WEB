@@ -52,6 +52,10 @@ export const Auth = {
   login: (email, password) =>
     api("/login", { method: "POST", body: { email, password } }),
   register: (payload) => api("/signup", { method: "POST", body: payload }),
+  requestSignupCode: (payload) =>
+    api("/auth/signup/request-code", { method: "POST", body: payload }),
+  confirmSignup: (payload) =>
+    api("/auth/signup/confirm", { method: "POST", body: payload }),
   logout: () => api("/logout", { method: "POST" }),
   getSessions: () => api("/sessions", { method: "GET" }),
   me: (token) =>
