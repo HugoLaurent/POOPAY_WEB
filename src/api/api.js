@@ -13,9 +13,25 @@ function joinUrl(base, path) {
 
 export async function api(
   path,
-  { method = "GET", body, headers: extraHeaders, raw = false } = {}
+  {
+    method = "GET",
+    body,
+    headers: extraHeaders,
+    raw = false,
+    token: tokenOverride,
+  } = {}
 ) {
-  const token = localStorage.getItem("access_token") || "";
+  let token = "";
+  try {
+    token = localStorage.getItem("access_token") || "";
+  } catch {
+    token = "";
+  }
+  if (typeof tokenOverride === "string" && tokenOverride.length > 0) {
+    token = tokenOverride;
+  } else if (tokenOverride === null) {
+    token = "";
+  }
   const isForm = body instanceof FormData;
 
   const headers = { ...(extraHeaders || {}) };
@@ -39,10 +55,16 @@ export async function api(
 
   if (!res.ok) {
     const msg = payload?.message || res.statusText || "Erreur";
-    throw new Error(msg);
+    const error = new Error(msg);
+    error.status = res.status;
+    error.payload = payload;
+    throw error;
   }
   if (payload && payload.result === false) {
-    throw new Error(payload.message || "Erreur");
+    const error = new Error(payload.message || "Erreur");
+    error.status = res.status;
+    error.payload = payload;
+    throw error;
   }
   return raw ? payload : payload?.data ?? payload;
 }
