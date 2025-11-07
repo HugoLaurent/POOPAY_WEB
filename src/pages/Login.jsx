@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Hourglass } from "lucide-react";
 import { Auth } from "@/api";
 import { useAuthContext } from "@/context/AuthContext";
+import { usePrivacyModal } from "@/hooks";
 import logo from "@/assets/logo/logoPoopay.png";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { open: openPrivacyModal } = usePrivacyModal();
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [loading, setLoading] = useState(false);
@@ -109,6 +111,18 @@ export default function Login() {
               "Se connecter"
             )}
           </button>
+
+          <p className="mt-4 text-center text-xs text-poopay-text/70">
+            En te connectant, tu confirmes avoir lu notre{" "}
+            <button
+              type="button"
+              onClick={openPrivacyModal}
+              className="font-semibold text-poopay-active underline hover:opacity-90"
+            >
+              politique de confidentialit�
+            </button>
+            .
+          </p>
 
           <div className="mt-5 text-center text-sm">
             <a

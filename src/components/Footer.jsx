@@ -1,6 +1,7 @@
 import { Home, Trophy, Users, Settings, Timer } from "lucide-react";
 import { TabLink } from "./TabLink";
 import { useLocation } from "react-router-dom";
+import { usePrivacyModal } from "@/hooks";
 
 /** Onglets de la barre */
 const TABS = [
@@ -13,6 +14,7 @@ const TABS = [
 
 export default function Footer() {
   const location = useLocation();
+  const { open: openPrivacyModal } = usePrivacyModal();
   const primaryTab = TABS.find((tab) => tab.variant === "primary");
   const secondaryTabs = TABS.filter((tab) => tab.variant !== "primary");
 
@@ -36,6 +38,15 @@ export default function Footer() {
           ))}
         </ul>
       </nav>
+      <div className="mt-2 text-center">
+        <button
+          type="button"
+          onClick={openPrivacyModal}
+          className="text-xs text-poopay-text/70 underline hover:text-poopay-text"
+        >
+          Politique de confidentialit�
+        </button>
+      </div>
     </footer>
   );
 }

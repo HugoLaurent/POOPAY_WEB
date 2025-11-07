@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { NotificationsProvider } from "./context/NotificationsContext.jsx";
+import { PrivacyModalProvider } from "./context/PrivacyModalContext.jsx";
 import CookieConsent from "./components/CookieConsent.jsx";
 import "./index.css";
 
@@ -14,8 +15,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <AuthProvider>
         <NotificationsProvider>
-          <CookieConsent />
-          <App />
+          <PrivacyModalProvider>
+            <CookieConsent />
+            <App />
+          </PrivacyModalProvider>
         </NotificationsProvider>
       </AuthProvider>
     </BrowserRouter>

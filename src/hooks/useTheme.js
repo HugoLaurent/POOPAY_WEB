@@ -6,7 +6,7 @@ export { applyTheme };
 
 export function useTheme() {
   const { user, updateUser } = useAuthContext();
-  const theme = user?.theme ?? "system";
+  const theme = user?.theme ?? "light";
 
   useEffect(() => {
     applyTheme(theme);

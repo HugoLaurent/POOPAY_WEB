@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Eye, EyeOff, Hourglass } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@/api";
+import { usePrivacyModal } from "@/hooks";
 
 import logo from "@/assets/logo/logoPoopay.png";
 
@@ -14,6 +15,7 @@ const CODE_VALIDITY_MS = CODE_VALIDITY_MINUTES * 60 * 1000;
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { open: openPrivacyModal } = usePrivacyModal();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState("");
@@ -44,14 +46,6 @@ export default function SignUp() {
   });
   const [confirmationCode, setConfirmationCode] = useState("");
 
-  // Si tu gères le thème système quelque part, synchronise ici
-  useEffect(() => {
-    // Exemple: lire data-theme de <html>
-    const prefersDark =
-      document.documentElement.dataset.theme === "dark" ||
-      window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-    setData((d) => ({ ...d, theme: prefersDark ? "dark" : "light" }));
-  }, []);
 
   useEffect(() => {
     setVerification((prev) =>
@@ -378,6 +372,18 @@ export default function SignUp() {
                   </button>
                 </div>
               </div>
+
+              <p className="text-xs text-poopay-text/70 text-center">
+                Tes informations d’identification sont traitées selon notre{" "}
+                <button
+                  type="button"
+                  onClick={openPrivacyModal}
+                  className="font-semibold text-poopay-active underline hover:opacity-90"
+                >
+                  politique de confidentialité
+                </button>
+                .
+              </p>
             </div>
           )}
 
@@ -557,8 +563,15 @@ export default function SignUp() {
                 <p className="text-sm text-poopay-text/80">
                   En créant un compte, tu t’engages à fournir des infos exactes,
                   à utiliser l’app de manière responsable et à respecter la vie
-                  privée des autres. Tes données sont traitées selon notre
-                  politique de confidentialité.
+                  privée des autres. Tes donn?es sont trait?es selon notre {" "}
+                  <button
+                    type="button"
+                    onClick={openPrivacyModal}
+                    className="font-semibold text-poopay-active underline hover:opacity-90"
+                  >
+                    politique de confidentialit?
+                  </button>
+                  .
                 </p>
                 <label className="mt-3 flex items-center gap-3 cursor-pointer">
                   <input
@@ -695,3 +708,4 @@ export default function SignUp() {
     </div>
   );
 }
+

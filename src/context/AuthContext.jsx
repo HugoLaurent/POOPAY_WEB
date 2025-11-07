@@ -44,9 +44,9 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(() => Boolean(readToken()));
   const [error, setError] = useState("");
 
-  // Appliquer le thème si présent côté user
+  // Appliquer le thème utilisateur ou défaut clair
   useEffect(() => {
-    if (user?.theme) applyTheme(user.theme);
+    applyTheme(user?.theme || "light");
   }, [user?.theme]);
 
   // Bootstrap / vérifier le token
@@ -118,7 +118,7 @@ export function AuthProvider({ children }) {
     setUser(null);
     setError("");
     setLoading(false);
-    applyTheme("system");
+    applyTheme("light");
   }, []);
 
   const refresh = useCallback(async () => {

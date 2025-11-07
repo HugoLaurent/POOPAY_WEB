@@ -1,12 +1,11 @@
 ﻿// src/pages/Settings.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@/hooks"; // handled by the layout
+import { useTheme, usePrivacyModal } from "@/hooks"; // handled by the layout
 
 import { User } from "@/api";
 import {
   MesSessions,
-  ConfidentialitePermissions,
   SubscriptionManager,
 } from "@/pages/SettingsComponents";
 import { openPrintWindow } from "@/utils";
@@ -16,11 +15,11 @@ import SimpleModal from "@/components/SimpleModal.jsx";
 export default function Settings() {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { open: openPrivacyModal } = usePrivacyModal();
   const { user, logout, updateUser } = useAuthContext();
   const [username, setUsername] = useState(user?.username ?? "");
   const [saving, setSaving] = useState(false);
   const [isSessionsModalOpen, setIsSessionsModalOpen] = useState(false);
-  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isConfirmingReset, setIsConfirmingReset] = useState(false);
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
@@ -184,7 +183,7 @@ export default function Settings() {
             <li className="text-poopay-text/90">
               <button
                 type="button"
-                onClick={() => setIsPrivacyModalOpen(true)}
+                onClick={openPrivacyModal}
                 className="w-full text-left text-poopay-text/90 hover:text-poopay-text hover:underline transition"
               >
                 Confidentialite et permissions
@@ -224,10 +223,6 @@ export default function Settings() {
         <MesSessions
           isOpen={isSessionsModalOpen}
           onClose={() => setIsSessionsModalOpen(false)}
-        />
-        <ConfidentialitePermissions
-          isOpen={isPrivacyModalOpen}
-          onClose={() => setIsPrivacyModalOpen(false)}
         />
         <SimpleModal
           isOpen={isSubscriptionModalOpen}
