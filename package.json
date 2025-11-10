@@ -8,7 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "test:unit": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "html:validate": "npm run build && html-validate \"dist/**/*.html\"",
+    "lhci:run": "lhci autorun"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^5.3.0",
@@ -24,16 +28,25 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.56.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
+    "@vitest/coverage-v8": "^4.0.8",
     "eslint": "^9.36.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "html-validate": "^10.3.1",
+    "jest-axe": "^10.0.0",
     "jsdom": "^27.1.0",
+    "msw": "^2.12.1",
+    "typescript": "^5.9.3",
     "vite": "^7.1.7",
     "vitest": "^4.0.7"
   }

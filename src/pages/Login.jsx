@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Hourglass } from "lucide-react";
 import { Auth } from "@/api";
@@ -18,6 +18,9 @@ export default function Login() {
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
   const canSubmit =
     email.trim().length > 3 && pwd.length >= 12 && hasSpecialChar && !loading;
+
+  const emailFieldId = "login-email";
+  const passwordFieldId = "login-password";
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -56,7 +59,7 @@ export default function Login() {
 
         {/* Formulaire */}
         <form onSubmit={handleSubmit} className=" px-6 py-7 text-left mx-auto">
-          <label className="block text-[15px] font-semibold text-poopay-active mb-2">
+          <label htmlFor={emailFieldId} className="block text-[15px] font-semibold text-poopay-active mb-2">
             Email
           </label>
           <input
@@ -66,19 +69,21 @@ export default function Login() {
             disabled={loading}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            id={emailFieldId}
             className="w-full rounded-3xl bg-white/70 text-poopay-text placeholder:text-poopay-mute/80 px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition mb-4"
           />
 
-          <label className="block text-[15px] font-semibold text-poopay-active mb-2">
+          <label htmlFor={passwordFieldId} className="block text-[15px] font-semibold text-poopay-active mb-2">
             Mot de passe
           </label>
           <input
             type="password"
-            placeholder="Au moins 12 caractères et un spécial…"
+            placeholder="Au moins 12 caractÃ¨res et un spÃ©cialâ€¦"
             autoComplete="current-password"
             disabled={loading}
             value={pwd}
             onChange={(e) => setPwd(e.target.value)}
+            id={passwordFieldId}
             className="w-full rounded-3xl bg-white/70 text-poopay-text placeholder:text-poopay-mute/80 px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition mb-6"
           />
 
@@ -105,7 +110,7 @@ export default function Login() {
             {loading ? (
               <span className="inline-flex items-center gap-2 justify-center">
                 <Hourglass className="animate-pulse" size={18} />
-                Chargement…
+                Chargementâ€¦
               </span>
             ) : (
               "Se connecter"
@@ -119,7 +124,7 @@ export default function Login() {
               onClick={openPrivacyModal}
               className="font-semibold text-poopay-active underline hover:opacity-90"
             >
-              politique de confidentialit�
+              politique de confidentialitï¿½
             </button>
             .
           </p>
@@ -129,15 +134,20 @@ export default function Login() {
               href="/signup"
               className="text-poopay-text/90 hover:opacity-80 underline"
             >
-              Pas de compte ? S’inscrire
+              Pas de compte ? Sâ€™inscrire
             </a>
           </div>
         </form>
 
         <p className="mt-6 text-center text-xs italic text-poopay-mute">
-          Prêt(e) à devenir un(e) expert(e) du transit ?
+          PrÃªt(e) Ã  devenir un(e) expert(e) du transit ?
         </p>
       </div>
     </div>
   );
 }
+
+
+
+
+
