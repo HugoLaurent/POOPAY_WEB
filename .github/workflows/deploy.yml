@@ -2,7 +2,7 @@ name: CI/CD Web
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -11,12 +11,15 @@ concurrency:
 
 jobs:
   test:
-    name: Web - Tests
+    name: Web - Run Tests
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
@@ -24,27 +27,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint (optional)
-        run: |
-          if [ -f package.json ] && jq -e '.scripts.lint' package.json > /dev/null; then
-            npm run lint
-          else
-            echo "No lint script, skipping."
-          fi
-
       - name: Run tests
-        run: |
-          if [ -f package.json ] && jq -e '.scripts.test' package.json > /dev/null; then
-            npm test -- --ci
-          else
-            echo "No test script found, failing safely."; exit 1
-          fi
+        run: npm test
 
   deploy:
-    name: Web - Deploy to VPS
+    name: Deploy to VPS
     needs: test
     runs-on: ubuntu-latest
     if: success()
+
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.1.0
