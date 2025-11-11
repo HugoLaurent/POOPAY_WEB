@@ -60,9 +60,10 @@ jobs:
     name: Notify Discord
     needs: [test, deploy]
     runs-on: ubuntu-latest
-    if: always() # s'exécute même si échec avant
+    if: always() # s'exécute même en cas d'échec
     steps:
       - name: Send Discord notification
+        shell: bash
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           REPO: ${{ github.repository }}
@@ -73,51 +74,40 @@ jobs:
           TEST_RESULT: ${{ needs.test.result }}
           DEPLOY_RESULT: ${{ needs.deploy.result }}
         run: |
-          status_emoji="❌"
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "No DISCORD_WEBHOOK_URL secret set. Skipping Discord notify."
+            exit 0
+          fi
+
+          status="failed"
+          color=15548997   # rouge
           title="CI/CD: tests ou déploiement échoués"
           if [ "${DEPLOY_RESULT}" = "success" ]; then
-            status_emoji="✅"
-            title="CI/CD: déploiement réussi"
+            status="success"; color=5763719; title="CI/CD: déploiement réussi"
           elif [ "${TEST_RESULT}" = "success" ] && [ -z "${DEPLOY_RESULT}" ]; then
-            # Cas rare: pas de job deploy (skip)
-            status_emoji="🟡"
-            title="CI/CD: tests OK (pas de déploiement)"
+            status="warning"; color=16776960; title="CI/CD: tests OK (pas de déploiement)"
           fi
 
           short_sha=$(echo "$SHA" | cut -c1-7)
 
-          read -r -d '' JSON <<'EOF'
+          JSON=$(cat <<EOF
           {
             "embeds": [
               {
-                "title": "%TITLE%",
-                "description": "%EMOJI% **%REPO%**\n**Branche:** %BRANCH%\n**Commit:** `%SHA%`\n**Auteur:** %ACTOR%",
-                "color": %COLOR%,
+                "title": "$title",
+                "description": "**$REPO**\\n**Branche:** $BRANCH\\n**Commit:** \`$short_sha\`\\n**Auteur:** $ACTOR",
+                "color": $color,
                 "fields": [
-                  { "name": "Tests",   "value": "`%TEST%`",   "inline": true },
-                  { "name": "Deploy",  "value": "`%DEPLOY%`", "inline": true },
-                  { "name": "Run",     "value": "[Ouvrir le run](%RUN_URL%)", "inline": false }
+                  { "name": "Tests",  "value": "\`$TEST_RESULT\`",   "inline": true },
+                  { "name": "Deploy", "value": "\`$([ -z "$DEPLOY_RESULT" ] && echo skipped || echo $DEPLOY_RESULT)\`", "inline": true },
+                  { "name": "Run",    "value": "[Ouvrir le run]($RUN_URL)", "inline": false }
                 ]
               }
-            ]
+            ],
+            "allowed_mentions": { "parse": [] }
           }
           EOF
+          )
 
-          # Couleurs Discord (vert 0x57F287, rouge 0xED4245, jaune 0xFEE75C)
-          COLOR=15548997  # rouge par défaut
-          if [ "${DEPLOY_RESULT}" = "success" ]; then COLOR=5763719; fi
-          if [ "${TEST_RESULT}" = "success" ] && [ -z "${DEPLOY_RESULT}" ]; then COLOR=16776960; fi
-
-          JSON="${JSON//%TITLE%/$title}"
-          JSON="${JSON//%EMOJI%/$status_emoji}"
-          JSON="${JSON//%REPO%/$REPO}"
-          JSON="${JSON//%BRANCH%/$BRANCH}"
-          JSON="${JSON//%SHA%/$short_sha}"
-          JSON="${JSON//%ACTOR%/$ACTOR}"
-          JSON="${JSON//%TEST%/$TEST_RESULT}"
-          JSON="${JSON//%DEPLOY%/${DEPLOY_RESULT:-"skipped"}}"
-          JSON="${JSON//%RUN_URL%/$RUN_URL}"
-          JSON="${JSON//%COLOR%/$COLOR}"
-
-          curl -sS -H "Content-Type: application/json" -X POST \
-               -d "$JSON" "$DISCORD_WEBHOOK_URL" >/dev/null
+          curl -sS -H "Content-Type: application/json" \
+               -X POST -d "$JSON" "$DISCORD_WEBHOOK_URL"
