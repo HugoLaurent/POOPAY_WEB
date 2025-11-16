@@ -11,3 +11,4 @@ export { default as CookieConsent } from "./CookieConsent.jsx";
 export { default as SimpleModal } from "./SimpleModal.jsx";
 export { TabLink } from "./TabLink.jsx";
 export { default as Toast } from "./Toast.jsx";
+export { default as SEO } from "./Seo.jsx";
