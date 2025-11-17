@@ -90,8 +90,7 @@ function buildConsentPayload(tacInstance) {
     decision = "deny";
   }
 
-  const consentId =
-    tac.uuid || getConsentCookieSnapshot(tac) || generateId();
+  const consentId = tac.uuid || getConsentCookieSnapshot(tac) || generateId();
 
   return {
     type: "cookie_banner",
@@ -136,6 +135,29 @@ export default function CookieConsent() {
     const tac = window.tarteaucitron;
     if (!tac || typeof tac.init !== "function") return false;
 
+    // --- Déclaration du service Umami (mesure d'audience) ---
+    tac.services = tac.services || {};
+    tac.services.umami = {
+      key: "umami",
+      type: "analytic",
+      name: "Umami Analytics",
+      needConsent: true,
+      cookies: [],
+      js: function () {
+        const script = document.createElement("script");
+        script.defer = true;
+        script.src = "https://cloud.umami.is/script.js";
+        script.setAttribute(
+          "data-website-id",
+          "32518c22-7104-4efd-a2aa-92a83168b7ab"
+        );
+        document.head.appendChild(script);
+      },
+      fallback: function () {
+        // Rien à nettoyer : Umami ne pose pas de cookies côté client
+      },
+    };
+
     tac.init({
       privacyUrl: "",
       bodyPosition: "bottom",
@@ -154,6 +176,7 @@ export default function CookieConsent() {
       mandatory: true,
     });
 
+    // --- AdSense (si configuré) ---
     if (ADSENSE_ID) {
       tac.user = tac.user || {};
       tac.user.adsenseId = ADSENSE_ID;
@@ -162,6 +185,15 @@ export default function CookieConsent() {
         tac.job.push("adsense");
       }
     }
+
+    // --- Ajout du job Umami pour la mesure d'audience ---
+    tac.user = tac.user || {};
+    tac.job = tac.job || [];
+    tac.user.umami = true;
+    if (!tac.job.includes("umami")) {
+      tac.job.push("umami");
+    }
+
     return true;
   }, []);
 
@@ -293,7 +325,10 @@ export default function CookieConsent() {
     if (typeof document === "undefined") return undefined;
     document.addEventListener("tac.consent_updated", handleConsentDecision);
     return () => {
-      document.removeEventListener("tac.consent_updated", handleConsentDecision);
+      document.removeEventListener(
+        "tac.consent_updated",
+        handleConsentDecision
+      );
     };
   }, [handleConsentDecision]);
 
