@@ -5,7 +5,7 @@ import { Auth } from "@/api";
 import { useAuthContext } from "@/context/AuthContext";
 import { usePrivacyModal } from "@/hooks";
 import logo from "@/assets/logo/logoPoopay.png";
-import SEO from "@/components/SEO";
+import { SEO } from "@/components";
 
 export default function Login() {
   const navigate = useNavigate();

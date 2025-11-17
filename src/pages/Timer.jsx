@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SessionsFetch } from "@/api";
 import { useAuthContext } from "@/context/AuthContext";
-import Toast from "@/components/Toast.jsx";
+
+import { SEO, Toast } from "@/components";
 
 const MINIMUM_SESSION_SECONDS = 30;
 
@@ -16,9 +17,7 @@ function formatTime(totalSeconds) {
 }
 
 function formatAmount(value, currency = "EUR") {
-  return (
-    value || 0
-  ).toLocaleString("fr-FR", {
+  return (value || 0).toLocaleString("fr-FR", {
     style: "currency",
     currency,
     minimumFractionDigits: 2,
@@ -30,9 +29,8 @@ export default function Timer() {
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const hourlyRate = useMemo(
-    () => Number.isFinite(Number(user?.hourlyRate))
-      ? Number(user.hourlyRate)
-      : 12,
+    () =>
+      Number.isFinite(Number(user?.hourlyRate)) ? Number(user.hourlyRate) : 12,
     [user?.hourlyRate]
   );
   const currency = user?.currency ?? "EUR";
@@ -126,7 +124,10 @@ export default function Timer() {
       Math.floor((Date.now() - startTimestamp) / 1000)
     );
 
-    if (!Number.isFinite(finalElapsed) || finalElapsed < MINIMUM_SESSION_SECONDS) {
+    if (
+      !Number.isFinite(finalElapsed) ||
+      finalElapsed < MINIMUM_SESSION_SECONDS
+    ) {
       setError(
         "Session trop courte pour être enregistrée (minimum 30 secondes)."
       );
@@ -167,123 +168,137 @@ export default function Timer() {
   };
 
   const formattedTime = formatTime(elapsedSeconds);
-  const estimatedAmount = formatAmount(elapsedSeconds * ratePerSecond, currency);
+  const estimatedAmount = formatAmount(
+    elapsedSeconds * ratePerSecond,
+    currency
+  );
   const isRunning = status === "running";
   const isPaused = status === "paused";
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-poopay-bg px-4 pb-32 sm:px-6">
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 pt-8">
-        <section className="rounded-3xl bg-poopay-card px-6 py-8 text-center shadow-soft sm:px-8">
-          <p className="text-[11px] uppercase tracking-[0.28em] text-poopay-mute">
-            Session en cours
-          </p>
-          <div className="mt-4 text-4xl font-extrabold tabular-nums text-poopay-text sm:text-5xl">
-            {formattedTime}
-          </div>
-          <p className="mt-3 text-sm text-poopay-text/70">
-            Estimation : {estimatedAmount}
-          </p>
-          <p className="mt-1 text-xs text-poopay-text/60">
-            Taux horaire pris en compte : {formatAmount(hourlyRate, currency)} / h
-          </p>
-        </section>
+    <>
+      <SEO
+        title="Minuteur de session – Poopay"
+        description="Lance, mets en pause et enregistre tes sessions Poopay en temps réel pour suivre précisément ton temps et ton équivalent salaire."
+        url="https://poopay.hugolaurent.fr/timer"
+      />
 
-        <section className="rounded-3xl bg-poopay-card px-6 py-6 shadow-soft sm:px-8">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-base font-semibold text-poopay-text sm:text-lg">
-              Contrôle du minuteur
-            </h2>
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-poopay-text/60">
-              {isRunning ? "En cours" : isPaused ? "En pause" : "Prêt"}
-            </span>
-          </div>
+      <div className="min-h-[calc(100vh-64px)] bg-poopay-bg px-4 pb-32 sm:px-6">
+        <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 pt-8">
+          <section className="rounded-3xl bg-poopay-card px-6 py-8 text-center shadow-soft sm:px-8">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-poopay-mute">
+              Session en cours
+            </p>
+            <div className="mt-4 text-4xl font-extrabold tabular-nums text-poopay-text sm:text-5xl">
+              {formattedTime}
+            </div>
+            <p className="mt-3 text-sm text-poopay-text/70">
+              Estimation : {estimatedAmount}
+            </p>
+            <p className="mt-1 text-xs text-poopay-text/60">
+              Taux horaire pris en compte : {formatAmount(hourlyRate, currency)}{" "}
+              / h
+            </p>
+          </section>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            {status === "idle" && (
+          <section className="rounded-3xl bg-poopay-card px-6 py-6 shadow-soft sm:px-8">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <h2 className="text-base font-semibold text-poopay-text sm:text-lg">
+                Contrôle du minuteur
+              </h2>
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-poopay-text/60">
+                {isRunning ? "En cours" : isPaused ? "En pause" : "Prêt"}
+              </span>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              {status === "idle" && (
+                <button
+                  type="button"
+                  onClick={handleStart}
+                  className="w-full rounded-xl bg-poopay-active px-4 py-3 text-sm font-semibold text-white shadow transition hover:scale-[1.01] active:scale-[0.99]"
+                >
+                  Commencer une session
+                </button>
+              )}
+
+              {isRunning && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handlePause}
+                    disabled={saving}
+                    className="w-full rounded-xl bg-poopay-text/10 px-4 py-3 text-sm font-semibold text-poopay-text shadow transition hover:bg-poopay-text/15 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Mettre en pause
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleStop}
+                    disabled={saving}
+                    className="w-full rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow transition hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Terminer et enregistrer
+                  </button>
+                </>
+              )}
+
+              {isPaused && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleResume}
+                    disabled={saving}
+                    className="w-full rounded-xl bg-poopay-active px-4 py-3 text-sm font-semibold text-white shadow transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Reprendre
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleStop}
+                    disabled={saving}
+                    className="w-full rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow transition hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Terminer et enregistrer
+                  </button>
+                </>
+              )}
+            </div>
+
+            {(isRunning || isPaused) && (
               <button
                 type="button"
-                onClick={handleStart}
-                className="w-full rounded-xl bg-poopay-active px-4 py-3 text-sm font-semibold text-white shadow transition hover:scale-[1.01] active:scale-[0.99]"
+                onClick={handleCancel}
+                disabled={saving}
+                className="mt-3 w-full rounded-xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-500 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Commencer une session
+                Annuler la session
               </button>
             )}
 
-            {isRunning && (
-              <>
-                <button
-                  type="button"
-                  onClick={handlePause}
-                  disabled={saving}
-                  className="w-full rounded-xl bg-poopay-text/10 px-4 py-3 text-sm font-semibold text-poopay-text shadow transition hover:bg-poopay-text/15 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  Mettre en pause
-                </button>
-                <button
-                  type="button"
-                  onClick={handleStop}
-                  disabled={saving}
-                  className="w-full rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow transition hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  Terminer et enregistrer
-                </button>
-              </>
-            )}
+            <p className="mt-4 text-xs text-poopay-text/60">
+              Les sessions sauvegardées sont visibles dans l’onglet “Mes
+              sessions” des réglages.
+            </p>
+          </section>
 
-            {isPaused && (
-              <>
-                <button
-                  type="button"
-                  onClick={handleResume}
-                  disabled={saving}
-                  className="w-full rounded-xl bg-poopay-active px-4 py-3 text-sm font-semibold text-white shadow transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  Reprendre
-                </button>
-                <button
-                  type="button"
-                  onClick={handleStop}
-                  disabled={saving}
-                  className="w-full rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow transition hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  Terminer et enregistrer
-                </button>
-              </>
-            )}
-          </div>
-
-        {(isRunning || isPaused) && (
-          <button
-            type="button"
-            onClick={handleCancel}
-            disabled={saving}
-            className="mt-3 w-full rounded-xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-500 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+          {error && (
+            <div
+              role="status"
+              className="rounded-2xl bg-red-500/10 px-4 py-3 text-sm text-red-600"
             >
-              Annuler la session
-            </button>
+              {error}
+            </div>
           )}
+        </div>
 
-          <p className="mt-4 text-xs text-poopay-text/60">
-            Les sessions sauvegardées sont visibles dans l’onglet “Mes sessions” des réglages.
-          </p>
-        </section>
-
-        {error && (
-          <div
-            role="status"
-            className="rounded-2xl bg-red-500/10 px-4 py-3 text-sm text-red-600"
-          >
-            {error}
-          </div>
-        )}
+        <Toast
+          isOpen={toast.isOpen}
+          message={toast.message}
+          variant={toast.variant}
+          onClose={() => setToast((prev) => ({ ...prev, isOpen: false }))}
+        />
       </div>
-      <Toast
-        isOpen={toast.isOpen}
-        message={toast.message}
-        variant={toast.variant}
-        onClose={() => setToast((prev) => ({ ...prev, isOpen: false }))}
-      />
-    </div>
+    </>
   );
 }
