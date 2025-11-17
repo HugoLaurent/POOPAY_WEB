@@ -1,0 +1,35 @@
+User-agent: *
+Allow: /
+
+Disallow: /timer
+Disallow: /settings
+Disallow: /group
+Disallow: /profile
+
+Disallow: /me
+Disallow: /user/data
+Disallow: /sessions
+Disallow: /sessions/
+Disallow: /sessions/*
+Disallow: /groups
+Disallow: /groups/
+Disallow: /groups/create
+Disallow: /groups/*/leave
+Disallow: /groups/*/invitations
+Disallow: /group-invitations
+Disallow: /group-invitations/*
+Disallow: /group-invitations/*/respond
+Disallow: /home
+Disallow: /rankings
+Disallow: /change-theme
+Disallow: /notifications
+Disallow: /notifications/*
+Disallow: /payments
+Disallow: /payments/*
+Disallow: /consents
+Disallow: /auth/signup/request-code
+Disallow: /auth/signup/confirm
+Disallow: /logout
+
+# Sitemap
+Sitemap: https://poopay.hugolaurent.fr/sitemap.xml
