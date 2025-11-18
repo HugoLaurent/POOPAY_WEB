@@ -126,10 +126,17 @@ export default function Groups() {
       const created = await GroupsFetch.createGroup(payload);
 
       if (created && typeof created === "object") {
-        setGroups((prev) => [created, ...prev]);
-      } else {
-        await refreshGroups();
+        const hydrated = {
+          name: payload.name,
+          max_members: payload.max_members,
+          description: payload.description,
+          members: [],
+          ...created,
+        };
+        setGroups((prev) => [hydrated, ...prev]);
       }
+
+      await refreshGroups();
 
       setToast({
         isOpen: true,
