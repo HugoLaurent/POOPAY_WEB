@@ -38,7 +38,7 @@ function SubscriptionHistory({ payments }) {
   if (!payments?.length) {
     return (
       <p className="text-sm text-poopay-text/70">
-        Aucun paiement test enregistr&eacute;. Utilise la carte Stripe 4242 pour
+        Aucun paiement test enregistré. Utilise la carte Stripe 4242 pour
         simuler un abonnement premium.
       </p>
     );
@@ -67,11 +67,11 @@ function SubscriptionHistory({ payments }) {
               </dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt>Cr&eacute;&eacute;</dt>
+              <dt>Créé</dt>
               <dd>{formatDate(payment.createdAt)}</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt>Succ&egrave;s</dt>
+              <dt>Succès</dt>
               <dd>{formatDate(payment.succeededAt)}</dd>
             </div>
           </dl>
@@ -103,7 +103,7 @@ function SubscriptionForm({
     setMessage("");
 
     if (!stripe || !elements) {
-      setMessage("Stripe n'est pas initialis&eacute;. Recharge la page.");
+      setMessage("Stripe n'est pas initialisé. Recharge la page.");
       return;
     }
 
@@ -119,7 +119,7 @@ function SubscriptionForm({
       const { payment, clientSecret } = intentPayload ?? {};
 
       if (!clientSecret || !payment?.id) {
-        throw new Error("Impossible de cr&eacute;er l'intention de paiement.");
+        throw new Error("Impossible de créer l'intention de paiement.");
       }
 
       const cardElement = elements.getElement(CardElement);
@@ -147,7 +147,7 @@ function SubscriptionForm({
       const syncResult = await PaymentsFetch.sync(payment.id);
 
       setStatus("succeeded");
-      setMessage("Paiement test valid&eacute; ! Abonnement activ&eacute;.");
+      setMessage("Paiement test validé ! Abonnement activé.");
       cardElement.clear();
       onCompleted?.(syncResult);
     } catch (error) {
@@ -166,8 +166,8 @@ function SubscriptionForm({
       onSubmit={handleSubmit}
     >
       <p className="text-sm text-poopay-text/80">
-        Ce formulaire utilise Stripe en mode test. Aucun
-        pr&eacute;l&egrave;vement r&eacute;el ne sera effectu&eacute;.
+        Ce formulaire utilise Stripe en mode test. Aucun prélèvement réel ne
+        sera effectué.
       </p>
 
       <div>
@@ -312,7 +312,7 @@ function SubscriptionSummary({ subscription, isPremium }) {
           Aucun abonnement actif.
         </p>
         <p className="mt-1 text-poopay-text/70">
-          Passe en premium pour cr&eacute;er des groupes jusqu'&agrave; 10
+          Passe en premium pour créer des groupes jusqu'à 10
           membres .
         </p>
       </div>
@@ -324,7 +324,7 @@ function SubscriptionSummary({ subscription, isPremium }) {
       <p className="font-semibold text-poopay-text">Abonnement premium actif</p>
       <dl className="mt-2 space-y-1 text-poopay-text/80">
         <div className="flex justify-between gap-4 text-[13px]">
-          <dt>Renouvel&eacute; le</dt>
+          <dt>Renouvelé le</dt>
           <dd>{formatDate(subscription?.currentPeriodStart)}</dd>
         </div>
         <div className="flex justify-between gap-4 text-[13px]">
@@ -388,11 +388,11 @@ export default function SubscriptionManager() {
     return (
       <div className="rounded-2xl border border-dashed border-poopay-card/70 bg-poopay-card/30 px-4 py-5 text-sm text-poopay-text/80">
         <p className="font-semibold text-poopay-text">
-          Cl&eacute; Stripe manquante.
+          Clé Stripe manquante.
         </p>
         <p className="mt-2">
           Ajoute <code>VITE_STRIPE_PUBLISHABLE_KEY</code> dans ton fichier
-          <code>.env</code> du front pour activer la d&eacute;mo de paiement.
+          <code>.env</code> du front pour activer la démo de paiement.
         </p>
       </div>
     );

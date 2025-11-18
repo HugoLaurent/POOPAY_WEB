@@ -9,7 +9,7 @@ const TABS = [
   { to: "/leaderboard", label: "Classement", Icon: Trophy },
   { to: "/timer", label: "Timer", Icon: Timer, variant: "primary" },
   { to: "/group", label: "Groupe", Icon: Users },
-  { to: "/settings", label: "Reglages", Icon: Settings },
+  { to: "/settings", label: "Réglages", Icon: Settings },
 ];
 
 export default function Footer() {
@@ -44,7 +44,7 @@ export default function Footer() {
           onClick={openPrivacyModal}
           className="text-xs text-poopay-text/70 underline hover:text-poopay-text"
         >
-          Politique de confidentialit�
+          Politique de confidentialité
         </button>
       </div>
     </footer>

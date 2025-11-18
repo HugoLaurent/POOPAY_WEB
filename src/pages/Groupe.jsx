@@ -109,7 +109,7 @@ export default function Groups() {
     const parsedMax = Number.parseInt(createMaxMembers, 10);
     if (!Number.isFinite(parsedMax) || parsedMax < 2) {
       setCreateError(
-        "Le nombre maximal doit etre un entier superieur ou egal a 2."
+        "Le nombre maximal doit être un entier supérieur ou égal à 2."
       );
       return;
     }
@@ -140,14 +140,14 @@ export default function Groups() {
 
       setToast({
         isOpen: true,
-        message: "Le groupe a ete cree avec succes.",
+        message: "Le groupe a été créé avec succès.",
         variant: "success",
       });
       handleCloseCreateModal();
     } catch (error) {
       console.error(error);
       setCreateError(
-        error?.message || "Impossible de creer le groupe pour le moment."
+        error?.message || "Impossible de créer le groupe pour le moment."
       );
     } finally {
       setCreateLoading(false);
@@ -165,7 +165,7 @@ export default function Groups() {
           onClick={handleOpenCreateModal}
           className="px-4 py-2 rounded-xl text-sm font-semibold transition border bg-[#8B4513] text-white border-[#8B4513]"
         >
-          Creer un groupe
+          Créer un groupe
         </button>
       </div>
 
@@ -183,7 +183,7 @@ export default function Groups() {
       )}
 
       {!loading && !err && groups.length === 0 && (
-        <p className="px-4 mt-6 text-poopay-mute">Aucun groupe trouve.</p>
+        <p className="px-4 mt-6 text-poopay-mute">Aucun groupe trouvé.</p>
       )}
 
       {!loading &&
@@ -203,7 +203,7 @@ export default function Groups() {
         onInviteSuccess={(groupName) => {
           setToast({
             isOpen: true,
-            message: `Invitation envoyee pour "${groupName}".`,
+            message: `Invitation envoyée pour "${groupName}".`,
             variant: "success",
           });
         }}
@@ -212,7 +212,7 @@ export default function Groups() {
           setSelectedGroup(null);
           setToast({
             isOpen: true,
-            message: `Tu as quitte le groupe "${groupName}".`,
+            message: `Tu as quitté le groupe "${groupName}".`,
             variant: "success",
           });
         }}
@@ -226,7 +226,7 @@ export default function Groups() {
         <form onSubmit={handleCreateGroup} className="p-6 space-y-5">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-poopay-text">
-              Creer un groupe
+              Créer un groupe
             </h2>
             <button
               type="button"
@@ -259,8 +259,8 @@ export default function Groups() {
               />
               {!isPremium && (
                 <p className="mt-1 text-sm text-poopay-mute">
-                  Le nombre maximum de membres autorises dans ce groupe est de
-                  3, passez en mode premium pour le monter a 10 !
+                  Le nombre maximum de membres autorisés dans ce groupe est de
+                  3, passe en mode premium pour le monter à 10 !
                 </p>
               )}
             </label>
@@ -292,7 +292,7 @@ export default function Groups() {
               disabled={createLoading}
               className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-[#8B4513] border border-[#8B4513] transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {createLoading ? "Creation..." : "Valider"}
+              {createLoading ? "Création..." : "Valider"}
             </button>
           </div>
         </form>
