@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { DayPills, GoogleAd } from "@/components";
 import { HomeFetch } from "@/api";
 import { useAuthContext } from "@/context/AuthContext";
+import { usePrivacyModal } from "@/hooks";
 
 const fmtH = (h) => `${h.toFixed(1)}h`;
 const euro = (n) =>
@@ -31,6 +32,15 @@ export default function Home() {
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
   const { user } = useAuthContext();
+  const { open: openPrivacyModal } = usePrivacyModal();
+  const handleOpenCookies = useCallback(() => {
+    const panel = window?.tarteaucitron?.userInterface;
+    if (panel?.openPanel) {
+      panel.openPanel();
+      return;
+    }
+    window?.alert?.("Centre de gestion des cookies indisponible.");
+  }, []);
 
   // 0..6 où 6 === aujourd'hui
   const [activeIndex, setActiveIndex] = useState(6);
@@ -353,19 +363,30 @@ export default function Home() {
         </section>
       </main>
 
-      {/* footer */}
-      <div className="text-center text-[12px] text-poopay-mute mt-6">
-        <Link to="/privacy" className="underline">
+      {/* footer legal links */}
+      <div className="text-center text-[12px] text-poopay-mute mt-6 space-x-2">
+        <button
+          type="button"
+          onClick={openPrivacyModal}
+          className="underline text-poopay-mute hover:text-poopay-text transition"
+        >
           Confidentialité
-        </Link>{" "}
-        ·{" "}
-        <Link to="/cookies" className="underline">
+        </button>
+        <span>-</span>
+        <button
+          type="button"
+          onClick={handleOpenCookies}
+          className="underline text-poopay-mute hover:text-poopay-text transition"
+        >
           Cookies
-        </Link>{" "}
-        ·{" "}
-        <Link to="/contact-dpo" className="underline">
+        </button>
+        <span>-</span>
+        <a
+          href="mailto:privacy@poopay.app?subject=Demande%20DPO"
+          className="underline text-poopay-mute hover:text-poopay-text transition"
+        >
           DPO
-        </Link>
+        </a>
       </div>
     </div>
   );
