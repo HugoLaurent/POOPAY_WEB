@@ -3,6 +3,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Toast from "./Toast.jsx";
 import { api } from "@/api";
 import { useAuthContext } from "@/context/AuthContext.jsx";
+import {
+  hideTarteaucitronUi,
+  showTarteaucitronUi,
+} from "@/utils/tarteaucitron.js";
 
 const ADSENSE_ID = import.meta.env.VITE_GOOGLE_ADS_CLIENT || "";
 const BANNER_VERSION = import.meta.env.VITE_COOKIE_BANNER_VERSION || "v1";
@@ -194,6 +198,11 @@ export default function CookieConsent() {
       tac.job.push("umami");
     }
 
+    const initialPayload = buildConsentPayload(tac);
+    if (initialPayload?.metadata?.decision === "accept") {
+      hideTarteaucitronUi();
+    }
+
     return true;
   }, []);
 
@@ -303,6 +312,11 @@ export default function CookieConsent() {
   const handleConsentDecision = useCallback(() => {
     const payload = buildConsentPayload();
     if (!payload) return;
+    if (payload?.metadata?.decision === "accept") {
+      hideTarteaucitronUi();
+    } else {
+      showTarteaucitronUi();
+    }
     enqueueConsent(payload);
     drainQueue();
   }, [drainQueue, enqueueConsent]);

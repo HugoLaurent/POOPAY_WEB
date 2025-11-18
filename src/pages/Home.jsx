@@ -4,6 +4,7 @@ import { DayPills, GoogleAd } from "@/components";
 import { HomeFetch } from "@/api";
 import { useAuthContext } from "@/context/AuthContext";
 import { usePrivacyModal } from "@/hooks";
+import { showTarteaucitronUi } from "@/utils/tarteaucitron.js";
 
 const fmtH = (h) => `${h.toFixed(1)}h`;
 const euro = (n) =>
@@ -34,6 +35,7 @@ export default function Home() {
   const { user } = useAuthContext();
   const { open: openPrivacyModal } = usePrivacyModal();
   const handleOpenCookies = useCallback(() => {
+    showTarteaucitronUi();
     const panel = window?.tarteaucitron?.userInterface;
     if (panel?.openPanel) {
       panel.openPanel();

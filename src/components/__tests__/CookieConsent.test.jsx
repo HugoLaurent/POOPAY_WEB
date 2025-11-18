@@ -106,5 +106,27 @@ describe("CookieConsent", () => {
     expect(options.token).toBe("late-token");
     await waitFor(() => expect(localStorage.getItem(CONSENT_STORAGE_KEY)).toBeNull());
   });
-});
 
+  it("hides the tarteaucitron UI when every service is accepted", async () => {
+    const root = document.createElement("div");
+    root.id = "tarteaucitronRoot";
+    document.body.appendChild(root);
+    const banner = document.createElement("div");
+    banner.id = "tarteaucitronAlertBig";
+    document.body.appendChild(banner);
+
+    apiMock.mockResolvedValue({});
+
+    render(<CookieConsent />);
+
+    await waitFor(() => expect(window.tarteaucitron.init).toHaveBeenCalled());
+
+    document.dispatchEvent(new Event("tac.consent_updated"));
+
+    await waitFor(() => {
+      expect(root.style.display).toBe("none");
+      expect(root.getAttribute("aria-hidden")).toBe("true");
+      expect(banner.style.display).toBe("none");
+    });
+  });
+});
