@@ -157,6 +157,12 @@ export default function Login() {
             </p>
 
             <div className="mt-5 space-y-2 text-center text-sm">
+              <a
+                href="/signup"
+                className="text-poopay-text/90 hover:opacity-80 underline"
+              >
+                Pas de compte ? S&apos;inscrire
+              </a>
               <button
                 type="button"
                 onClick={() => setIsResetModalOpen(true)}
@@ -164,12 +170,6 @@ export default function Login() {
               >
                 J&apos;ai oublie mon mot de passe
               </button>
-              <a
-                href="/signup"
-                className="text-poopay-text/90 hover:opacity-80 underline"
-              >
-                Pas de compte ? S&apos;inscrire
-              </a>
             </div>
           </form>
 
