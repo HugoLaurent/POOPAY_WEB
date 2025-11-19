@@ -394,13 +394,13 @@ export default function SignUp() {
               </div>
 
               <p className="text-xs text-poopay-text/70 text-center">
-                Tes informations dâ€™identification sont traitÃ©es selon notre{" "}
+                Tes informations d'identification sont traitées selon notre{" "}
                 <button
                   type="button"
                   onClick={openPrivacyModal}
                   className="font-semibold text-poopay-active underline hover:opacity-90"
                 >
-                  politique de confidentialitÃ©
+                  politique de confidentialité
                 </button>
                 .
               </p>
@@ -412,7 +412,7 @@ export default function SignUp() {
             <div className="space-y-4">
               <div>
                 <label className="block text-[15px] font-semibold text-poopay-active mb-2">
-                  Nom dâ€™utilisateur
+                  Nom d'utilisateur
                 </label>
                 <input
                   type="text"
@@ -426,11 +426,11 @@ export default function SignUp() {
 
               <div>
                 <label className="block text-[15px] font-semibold text-poopay-active mb-2">
-                  DÃ©partement
+                  Département
                 </label>
                 <input
                   type="text"
-                  placeholder="Rechercher un dÃ©partement (code ou nom)â€¦"
+                  placeholder="Rechercher un département (code ou nom)…"
                   disabled={isLoading}
                   value={searchDept}
                   onChange={(e) => setSearchDept(e.target.value)}
@@ -453,7 +453,7 @@ export default function SignUp() {
                             : "hover:bg-poopay-active/5 text-poopay-text"
                         }`}
                       >
-                        {item.code} â€” {item.nom}
+                        {item.code} — {item.nom}
                       </button>
                     );
                   })}
@@ -467,11 +467,11 @@ export default function SignUp() {
             <div className="space-y-4">
               <div>
                 <label className="block text-[15px] font-semibold text-poopay-active mb-2">
-                  CatÃ©gorie professionnelle
+                  Catégorie professionnelle
                 </label>
                 <input
                   type="text"
-                  placeholder="Rechercher une catÃ©gorieâ€¦"
+                  placeholder="Rechercher une catégorie…"
                   disabled={isLoading}
                   value={searchCategory}
                   onChange={(e) => setSearchCategory(e.target.value)}
@@ -510,7 +510,7 @@ export default function SignUp() {
             <div className="space-y-4">
               <div>
                 <label className="block text-[15px] font-semibold text-poopay-active mb-2">
-                  Salaire mensuel NET (â‚¬)
+                  Salaire mensuel NET (€)
                 </label>
                 <input
                   type="text"
@@ -542,9 +542,9 @@ export default function SignUp() {
               </div>
 
               <div className="bg-poopay-active/10 border border-poopay-active/30 rounded-2xl p-4 text-sm text-poopay-text">
-                ðŸ’¡ <span className="font-semibold">Astuce :</span> tu trouves
-                ces infos sur ta fiche de paie. 35h/sem â‰ˆ 151h/mois. Exemple :
-                1 850â‚¬ net pour 151h.
+                💡 <span className="font-semibold">Astuce :</span> tu trouves
+                ces infos sur ta fiche de paie. 35h/sem ≈ 151h/mois. Exemple :
+                1 850€ net pour 151h.
               </div>
             </div>
           )}
@@ -554,13 +554,13 @@ export default function SignUp() {
             <div className="space-y-5">
               <section className="bg-white rounded-2xl ring-1 ring-poopay-pill p-4">
                 <h3 className="font-semibold text-poopay-text mb-2">
-                  âš ï¸ Disclaimer SantÃ©
+                  ⚠️ Disclaimer Santé
                 </h3>
                 <p className="text-sm text-poopay-text/80">
-                  POOPAY est une appli ludique de gestion financiÃ¨re. Elle ne
-                  fournit pas de conseils mÃ©dicaux. En cas de douleurs ou
-                  symptÃ´mes, consulte un professionnel de santÃ©. Lâ€™app ne
-                  remplace pas un avis mÃ©dical.
+                  POOPAY est une appli ludique de gestion financière. Elle ne
+                  fournit pas de conseils médicaux. En cas de douleurs ou
+                  symptômes, consulte un professionnel de santé. L'app ne
+                  remplace pas un avis médical.
                 </p>
                 <label className="mt-3 flex items-center gap-3 cursor-pointer">
                   <input
@@ -571,26 +571,26 @@ export default function SignUp() {
                     disabled={isLoading}
                   />
                   <span className="text-sm text-poopay-text">
-                    Jâ€™ai lu et jâ€™accepte le disclaimer santÃ©
+                    J'ai lu et j'accepte le disclaimer santé
                   </span>
                 </label>
               </section>
 
               <section className="bg-white rounded-2xl ring-1 ring-poopay-pill p-4">
                 <h3 className="font-semibold text-poopay-text mb-2">
-                  ðŸ“‹ Conditions dâ€™utilisation
+                  📋 Conditions d'utilisation
                 </h3>
                 <p className="text-sm text-poopay-text/80">
-                  En crÃ©ant un compte, tu tâ€™engages Ã  fournir des infos
-                  exactes, Ã  utiliser lâ€™app de maniÃ¨re responsable et Ã 
-                  respecter la vie privÃ©e des autres. Tes donn?es sont trait?es
+                  En créant un compte, tu t'engages à fournir des infos
+                  exactes, à utiliser l'app de manière responsable et à
+                  respecter la vie privée des autres. Tes données sont traitées
                   selon notre{" "}
                   <button
                     type="button"
                     onClick={openPrivacyModal}
                     className="font-semibold text-poopay-active underline hover:opacity-90"
                   >
-                    politique de confidentialit?
+                    politique de confidentialité
                   </button>
                   .
                 </p>
@@ -603,7 +603,7 @@ export default function SignUp() {
                     disabled={isLoading}
                   />
                   <span className="text-sm text-poopay-text">
-                    Jâ€™accepte les conditions dâ€™utilisation
+                    J'accepte les conditions d'utilisation
                   </span>
                 </label>
               </section>
@@ -614,13 +614,13 @@ export default function SignUp() {
                   </h3>
                   {verification.codeSent && (
                     <span className="text-xs font-medium text-poopay-active bg-poopay-active/10 rounded-full px-3 py-1">
-                      Code envoyÃ©
+                      Code envoyé
                     </span>
                   )}
                 </div>
                 {!verification.codeSent ? (
                   <p className="text-sm text-poopay-text/80">
-                    Quand tu cliqueras sur Â« CrÃ©er mon compte Â», nous
+                    Quand tu cliqueras sur « Créer mon compte », nous
                     t'enverrons un code pour confirmer que tu es bien le
                     titulaire de l'adresse{" "}
                     <span className="font-semibold text-poopay-text">
@@ -631,12 +631,12 @@ export default function SignUp() {
                 ) : (
                   <>
                     <p className="text-sm text-poopay-text/80">
-                      Un email vient d'Ãªtre envoyÃ© Ã 
+                      Un email vient d'être envoyé à
                       <span className="font-semibold text-poopay-text">
                         {" "}
                         {data.email}
                       </span>
-                      . Recopie le code Ã  6 chiffres ci-dessous pour valider
+                      . Recopie le code à 6 chiffres ci-dessous pour valider
                       ton inscription.
                     </p>
                     <input
@@ -650,7 +650,7 @@ export default function SignUp() {
                         )
                       }
                       disabled={isLoading}
-                      placeholder="Code reÃ§u par email"
+                    placeholder="Code reçu par email"
                       className="w-full text-center tracking-[0.6rem] text-lg font-semibold rounded-2xl bg-poopay-active/10 text-poopay-text placeholder:text-poopay-mute px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition"
                     />
                     <div className="flex flex-wrap items-center gap-3 text-xs text-poopay-text/70">
@@ -672,7 +672,7 @@ export default function SignUp() {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}`
-                          : `Code valable ${CODE_VALIDITY_MINUTES} min aprÃ¨s l'envoi.`}
+                          : `Code valable ${CODE_VALIDITY_MINUTES} min après l'envoi.`}
                       </span>
                     </div>
                   </>
@@ -706,13 +706,13 @@ export default function SignUp() {
               {isLoading ? (
                 <span className="inline-flex items-center gap-2 justify-center">
                   <Hourglass className="animate-pulse" size={18} />
-                  Chargementâ€¦
+                  Chargement…
                 </span>
               ) : step === 5 ? (
                 verification.codeSent ? (
                   "Valider mon code"
                 ) : (
-                  "CrÃ©er mon compte"
+                  "Créer mon compte"
                 )
               ) : (
                 "Suivant"
@@ -725,13 +725,13 @@ export default function SignUp() {
               href="/login"
               className="text-poopay-text/90 hover:opacity-80 underline"
             >
-              DÃ©jÃ  un compte ? Se connecter
+              Déjà un compte ? Se connecter
             </a>
           </div>
         </div>
 
         <p className="mt-6 text-center text-xs italic text-poopay-mute">
-          PrÃªt(e) Ã  devenir un(e) expert(e) du transit ?
+          Prêt(e) à devenir un(e) expert(e) du transit ?
         </p>
       </div>
     </div>
