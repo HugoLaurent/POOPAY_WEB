@@ -1,11 +1,12 @@
 ﻿// src/pages/Settings.jsx
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTheme, usePrivacyModal } from "@/hooks"; // handled by the layout
+import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "@/hooks"; // handled by the layout
 
 import { User } from "@/api";
 import { MesSessions, SubscriptionManager } from "@/pages/SettingsComponents";
 import { openPrintWindow } from "@/utils";
+import { showTarteaucitronUi } from "@/utils/tarteaucitron.js";
 import { useAuthContext } from "@/context/AuthContext";
 import SimpleModal from "@/components/SimpleModal.jsx";
 import { Toast } from "@/components";
@@ -13,7 +14,6 @@ import { Toast } from "@/components";
 export default function Settings() {
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const { open: openPrivacyModal } = usePrivacyModal();
   const { user, logout, updateUser } = useAuthContext();
 
   const [username, setUsername] = useState(user?.username ?? "");
@@ -48,6 +48,16 @@ export default function Settings() {
     } catch (err) {
       console.error("Erreur lors du reset:", err);
     }
+  }
+
+  function openCookiesManager() {
+    showTarteaucitronUi();
+    const panel = window?.tarteaucitron?.userInterface;
+    if (panel?.openPanel) {
+      panel.openPanel();
+      return;
+    }
+    window?.alert?.("Centre de gestion des cookies indisponible.");
   }
 
   async function handleTheme() {
@@ -309,14 +319,43 @@ export default function Settings() {
                 </button>
               </li>
 
-              <li className="text-poopay-text/90">
-                <button
-                  type="button"
-                  onClick={openPrivacyModal}
-                  className="w-full text-left text-poopay-text/90 transition hover:text-poopay-text hover:underline"
-                >
-                  Confidentialite et permissions
-                </button>
+              <li className="text-poopay-text/90 space-y-1">
+                <span className="text-xs uppercase tracking-wide text-poopay-mute">
+                  Liens légaux
+                </span>
+                <div className="flex flex-col gap-1 text-sm">
+                  <Link
+                    to="/mentions-legales"
+                    className="text-poopay-text/90 transition hover:text-poopay-text hover:underline"
+                  >
+                    Mentions légales
+                  </Link>
+                  <Link
+                    to="/politique-de-confidentialite"
+                    className="text-poopay-text/90 transition hover:text-poopay-text hover:underline"
+                  >
+                    Politique de confidentialité
+                  </Link>
+                  <Link
+                    to="/cgv"
+                    className="text-poopay-text/90 transition hover:text-poopay-text hover:underline"
+                  >
+                    CGV
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={openCookiesManager}
+                    className="text-left text-poopay-text/90 transition hover:text-poopay-text hover:underline"
+                  >
+                    Cookies
+                  </button>
+                  <a
+                    href="mailto:privacy@poopay.app?subject=Demande%20DPO"
+                    className="text-poopay-text/90 transition hover:text-poopay-text hover:underline"
+                  >
+                    DPO
+                  </a>
+                </div>
               </li>
 
               <li className="text-poopay-text/90">

@@ -1,6 +1,17 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { AppLayout, AuthLayout } from "@/components";
-import { Groupe, Home, Leaderboard, Login, Settings, SignUp, Timer } from "@/pages";
+import {
+  ConditionsGeneralesVente,
+  Groupe,
+  Home,
+  Leaderboard,
+  Login,
+  MentionsLegales,
+  PolitiqueConfidentialite,
+  Settings,
+  SignUp,
+  Timer,
+} from "@/pages";
 import "./App.css";
 
 function App() {
@@ -19,6 +30,13 @@ function App() {
         <Route path="group" element={<Groupe />} />
         <Route path="settings" element={<Settings />} />
       </Route>
+      {/* �Y"� Pages publiques */}
+      <Route path="/mentions-legales" element={<MentionsLegales />} />
+      <Route
+        path="/politique-de-confidentialite"
+        element={<PolitiqueConfidentialite />}
+      />
+      <Route path="/cgv" element={<ConditionsGeneralesVente />} />
     </Routes>
   );
 }

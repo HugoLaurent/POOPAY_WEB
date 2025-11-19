@@ -1,6 +1,7 @@
-﻿import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import LegalLinks from "./LegalLinks.jsx";
 import { useAuth } from "@/hooks";
 
 export default function Layout() {
@@ -12,6 +13,7 @@ export default function Layout() {
       <Header />
       <main className="flex-1 w-full px-4 py-4 max-w-3xl mx-auto">
         <Outlet />
+        <LegalLinks className="mt-8" />
       </main>
       <Footer />
     </div>

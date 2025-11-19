@@ -1,6 +1,6 @@
 import { Home, Trophy, Users, Settings, Timer } from "lucide-react";
 import { TabLink } from "./TabLink";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { usePrivacyModal } from "@/hooks";
 
 /** Onglets de la barre */
@@ -9,7 +9,7 @@ const TABS = [
   { to: "/leaderboard", label: "Classement", Icon: Trophy },
   { to: "/timer", label: "Timer", Icon: Timer, variant: "primary" },
   { to: "/group", label: "Groupe", Icon: Users },
-  { to: "/settings", label: "Réglages", Icon: Settings },
+  { to: "/settings", label: "RǸglages", Icon: Settings },
 ];
 
 export default function Footer() {
@@ -23,7 +23,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="mt-12 max-w-3xl mx-auto w-full">
+    <footer className="my-12 max-w-3xl mx-auto w-full">
       <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-20 rounded-t-2xl bg-poopay-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-poopay-card/80 shadow-[0_-8px_24px_rgba(124,84,56,0.12)]">
         {primaryTab && (
           <div className="absolute left-1/2 top-0 -translate-x-1/2">
@@ -38,14 +38,31 @@ export default function Footer() {
           ))}
         </ul>
       </nav>
-      <div className="mt-2 text-center">
-        <button
-          type="button"
-          onClick={openPrivacyModal}
-          className="text-xs text-poopay-text/70 underline hover:text-poopay-text"
-        >
-          Politique de confidentialité
-        </button>
+      <div className="mt-2 px-4 text-center">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-poopay-text/70">
+          <Link
+            to="/mentions-legales"
+            className="underline hover:text-poopay-text"
+          >
+            Mentions légales
+          </Link>
+          <Link
+            to="/politique-de-confidentialite"
+            className="underline hover:text-poopay-text"
+          >
+            Politique de confidentialité
+          </Link>
+          <Link to="/cgv" className="underline hover:text-poopay-text">
+            CGV
+          </Link>
+          <button
+            type="button"
+            onClick={openPrivacyModal}
+            className="underline hover:text-poopay-text"
+          >
+            Préférences cookies
+          </button>
+        </div>
       </div>
     </footer>
   );

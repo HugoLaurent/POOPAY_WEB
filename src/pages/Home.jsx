@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { DayPills, GoogleAd } from "@/components";
 import { HomeFetch } from "@/api";
 import { useAuthContext } from "@/context/AuthContext";
-import { usePrivacyModal } from "@/hooks";
-import { showTarteaucitronUi } from "@/utils/tarteaucitron.js";
 
 const fmtH = (h) => `${h.toFixed(1)}h`;
 const euro = (n) =>
@@ -33,16 +31,6 @@ export default function Home() {
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
   const { user } = useAuthContext();
-  const { open: openPrivacyModal } = usePrivacyModal();
-  const handleOpenCookies = useCallback(() => {
-    showTarteaucitronUi();
-    const panel = window?.tarteaucitron?.userInterface;
-    if (panel?.openPanel) {
-      panel.openPanel();
-      return;
-    }
-    window?.alert?.("Centre de gestion des cookies indisponible.");
-  }, []);
 
   // 0..6 où 6 === aujourd'hui
   const [activeIndex, setActiveIndex] = useState(6);
@@ -364,32 +352,6 @@ export default function Home() {
           )}
         </section>
       </main>
-
-      {/* footer legal links */}
-      <div className="text-center text-[12px] text-poopay-mute mt-6 space-x-2">
-        <button
-          type="button"
-          onClick={openPrivacyModal}
-          className="underline text-poopay-mute hover:text-poopay-text transition"
-        >
-          Confidentialité
-        </button>
-        <span>-</span>
-        <button
-          type="button"
-          onClick={handleOpenCookies}
-          className="underline text-poopay-mute hover:text-poopay-text transition"
-        >
-          Cookies
-        </button>
-        <span>-</span>
-        <a
-          href="mailto:privacy@poopay.app?subject=Demande%20DPO"
-          className="underline text-poopay-mute hover:text-poopay-text transition"
-        >
-          DPO
-        </a>
-      </div>
     </div>
   );
 }
