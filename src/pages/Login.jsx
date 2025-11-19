@@ -5,7 +5,7 @@ import { Auth } from "@/api";
 import { useAuthContext } from "@/context/AuthContext";
 import { usePrivacyModal } from "@/hooks";
 import logo from "@/assets/logo/logoPoopay.png";
-import { SEO } from "@/components";
+import { PasswordResetModal, SEO } from "@/components";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,11 +14,19 @@ export default function Login() {
   const [pwd, setPwd] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const auth = useAuthContext();
 
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
+  const hasUppercase = /[A-Z]/.test(pwd);
+  const hasDigit = /\d/.test(pwd);
   const canSubmit =
-    email.trim().length > 3 && pwd.length >= 12 && hasSpecialChar && !loading;
+    email.trim().length > 3 &&
+    pwd.length >= 12 &&
+    hasSpecialChar &&
+    hasUppercase &&
+    hasDigit &&
+    !loading;
 
   const emailFieldId = "login-email";
   const passwordFieldId = "login-password";
@@ -82,23 +90,29 @@ export default function Login() {
               id={emailFieldId}
               className="w-full rounded-3xl bg-white/70 text-poopay-text placeholder:text-poopay-mute/80 px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition mb-4"
             />
+            <div>
+              <label
+                htmlFor={passwordFieldId}
+                className="block text-[15px] font-semibold text-poopay-active mb-2"
+              >
+                Mot de passe
+              </label>
 
-            <label
-              htmlFor={passwordFieldId}
-              className="block text-[15px] font-semibold text-poopay-active mb-2"
-            >
-              Mot de passe
-            </label>
-            <input
-              type="password"
-              placeholder="Au moins 12 caractères et un caractère spécial…"
-              autoComplete="current-password"
-              disabled={loading}
-              value={pwd}
-              onChange={(e) => setPwd(e.target.value)}
-              id={passwordFieldId}
-              className="w-full rounded-3xl bg-white/70 text-poopay-text placeholder:text-poopay-mute/80 px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition mb-6"
-            />
+              <input
+                type="password"
+                placeholder="Au moins 12 caractères, dont 1 majuscule, 1 chiffre, 1 symbole"
+                autoComplete="current-password"
+                disabled={loading}
+                value={pwd}
+                onChange={(e) => setPwd(e.target.value)}
+                id={passwordFieldId}
+                className="w-full rounded-3xl bg-white/70 text-poopay-text placeholder:text-poopay-mute/80 px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition mb-1"
+              />
+              <p className=" text-xs text-poopay-text/70 mb-5">
+                Minimum 12 caractères avec une majuscule, un chiffre et un
+                symbole (ex&nbsp;: ! ? % #).
+              </p>
+            </div>
 
             {err && (
               <p
@@ -142,12 +156,19 @@ export default function Login() {
               .
             </p>
 
-            <div className="mt-5 text-center text-sm">
+            <div className="mt-5 space-y-2 text-center text-sm">
+              <button
+                type="button"
+                onClick={() => setIsResetModalOpen(true)}
+                className="w-full text-poopay-active underline decoration-dotted underline-offset-4 hover:opacity-90"
+              >
+                J&apos;ai oublie mon mot de passe
+              </button>
               <a
                 href="/signup"
                 className="text-poopay-text/90 hover:opacity-80 underline"
               >
-                Pas de compte ? S’inscrire
+                Pas de compte ? S&apos;inscrire
               </a>
             </div>
           </form>
@@ -157,6 +178,12 @@ export default function Login() {
           </p>
         </div>
       </div>
+
+      <PasswordResetModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+        defaultEmail={email}
+      />
     </>
   );
 }

@@ -11,6 +11,7 @@ export { default as CookieConsent } from "./CookieConsent.jsx";
 export { default as LegalLinks } from "./LegalLinks.jsx";
 export { default as BackButton } from "./BackButton.jsx";
 export { default as SimpleModal } from "./SimpleModal.jsx";
+export { default as PasswordResetModal } from "./PasswordResetModal.jsx";
 export { TabLink } from "./TabLink.jsx";
 export { default as Toast } from "./Toast.jsx";
 export { default as SEO } from "./Seo.jsx";

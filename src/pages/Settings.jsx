@@ -9,7 +9,7 @@ import { openPrintWindow } from "@/utils";
 import { showTarteaucitronUi } from "@/utils/tarteaucitron.js";
 import { useAuthContext } from "@/context/AuthContext";
 import SimpleModal from "@/components/SimpleModal.jsx";
-import { Toast } from "@/components";
+import { PasswordResetModal, Toast } from "@/components";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -25,6 +25,8 @@ export default function Settings() {
   const [isExporting, setIsExporting] = useState(false);
   const [isConfirmingReset, setIsConfirmingReset] = useState(false);
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+  const [isPasswordResetModalOpen, setIsPasswordResetModalOpen] =
+    useState(false);
   const [toast, setToast] = useState({
     isOpen: false,
     message: "",
@@ -319,6 +321,16 @@ export default function Settings() {
                 </button>
               </li>
 
+              <li className="text-poopay-text/90">
+                <button
+                  type="button"
+                  onClick={() => setIsPasswordResetModalOpen(true)}
+                  className="w-full text-left text-poopay-text/90 transition hover:text-poopay-text hover:underline"
+                >
+                  Recevoir un lien de reinitialisation
+                </button>
+              </li>
+
               <li className="text-poopay-text/90 space-y-1">
                 <span className="text-xs uppercase tracking-wide text-poopay-mute">
                   Liens légaux
@@ -397,6 +409,12 @@ export default function Settings() {
           <MesSessions
             isOpen={isSessionsModalOpen}
             onClose={() => setIsSessionsModalOpen(false)}
+          />
+
+          <PasswordResetModal
+            isOpen={isPasswordResetModalOpen}
+            onClose={() => setIsPasswordResetModalOpen(false)}
+            forceEmail={user?.email || ""}
           />
 
           <SimpleModal

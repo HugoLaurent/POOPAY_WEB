@@ -8,6 +8,7 @@ import {
   Login,
   MentionsLegales,
   PolitiqueConfidentialite,
+  ResetPassword,
   Settings,
   SignUp,
   Timer,
@@ -21,6 +22,7 @@ function App() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Route>
       {/* 🔹 TOUTES LES AUTRES DANS LE LAYOUT */}
       <Route element={<AppLayout />}>

@@ -78,6 +78,10 @@ export const Auth = {
     api("/auth/signup/request-code", { method: "POST", body: payload }),
   confirmSignup: (payload) =>
     api("/auth/signup/confirm", { method: "POST", body: payload }),
+  requestPasswordReset: (payload) =>
+    api("/auth/password/forgot", { method: "POST", body: payload }),
+  resetPassword: (payload) =>
+    api("/auth/password/reset", { method: "POST", body: payload }),
   logout: () => api("/logout", { method: "POST" }),
   getSessions: () => api("/sessions", { method: "GET" }),
   me: (token) =>
