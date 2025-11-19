@@ -91,6 +91,8 @@ export const User = {
   changeTheme: (theme) =>
     api("/change-theme", { method: "POST", body: { theme } }),
   getAllData: () => api("/user/data", { method: "GET" }),
+  updateProfile: (payload) =>
+    api("/user/profile", { method: "PATCH", body: payload }),
 };
 
 export const HomeFetch = {
