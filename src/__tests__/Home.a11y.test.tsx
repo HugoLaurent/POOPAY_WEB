@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import Home from "@/pages/Home.jsx";
+import { PrivacyModalProvider } from "@/context/PrivacyModalContext.jsx";
 
 expect.extend(toHaveNoViolations);
 
@@ -57,7 +58,9 @@ describe("Home accessibility", () => {
     const user = userEvent.setup();
     const { container } = render(
       <MemoryRouter>
-        <Home />
+        <PrivacyModalProvider>
+          <Home />
+        </PrivacyModalProvider>
       </MemoryRouter>
     );
 
