@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, expect, test, vi } from "vitest";
 import AppLayout from "@/components/AppLayout.jsx";
+import { MemoryRouter } from "react-router-dom";
 
 expect.extend(toHaveNoViolations);
 
@@ -37,7 +38,11 @@ vi.mock("react-router-dom", async () => {
 
 describe("AppLayout accessibility", () => {
   test("renders without axe violations", async () => {
-    const { container } = render(<AppLayout />);
+    const { container } = render(
+      <MemoryRouter>
+        <AppLayout />
+      </MemoryRouter>
+    );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
