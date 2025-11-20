@@ -307,7 +307,7 @@ export default function Settings() {
                 >
                   {isExporting
                     ? "Preparation de l'impression..."
-                    : "Exporter mes donnees"}
+                    : "Exporter mes données"}
                 </button>
               </li>
 
@@ -327,7 +327,7 @@ export default function Settings() {
                   onClick={() => setIsPasswordResetModalOpen(true)}
                   className="w-full text-left text-poopay-text/90 transition hover:text-poopay-text hover:underline"
                 >
-                  Recevoir un lien de reinitialisation
+                  Recevoir un lien de réinitialisation
                 </button>
               </li>
 
@@ -376,7 +376,7 @@ export default function Settings() {
                   onClick={() => setIsSubscriptionModalOpen(true)}
                   className="w-full text-left text-poopay-text/90 transition hover:text-poopay-text hover:underline"
                 >
-                  Gerer mon abonnement (Stripe test)
+                  Gérer mon abonnement (Stripe test)
                 </button>
               </li>
             </ul>
@@ -402,7 +402,7 @@ export default function Settings() {
                 navigate("/login");
               }}
             >
-              Se deconnecter
+              Se déconnecter
             </button>
           </div>
 

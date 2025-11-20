@@ -9,7 +9,7 @@ const TABS = [
   { to: "/leaderboard", label: "Classement", Icon: Trophy },
   { to: "/timer", label: "Timer", Icon: Timer, variant: "primary" },
   { to: "/group", label: "Groupe", Icon: Users },
-  { to: "/settings", label: "RǸglages", Icon: Settings },
+  { to: "/settings", label: "Réglages", Icon: Settings },
 ];
 
 export default function Footer() {
