@@ -17,15 +17,9 @@ export default function Login() {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const auth = useAuthContext();
 
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
-  const hasUppercase = /[A-Z]/.test(pwd);
-  const hasDigit = /\d/.test(pwd);
   const canSubmit =
     email.trim().length > 3 &&
-    pwd.length >= 12 &&
-    hasSpecialChar &&
-    hasUppercase &&
-    hasDigit &&
+    pwd.length > 0 &&
     !loading;
 
   const emailFieldId = "login-email";
@@ -100,18 +94,14 @@ export default function Login() {
 
               <input
                 type="password"
-                placeholder="Au moins 12 caractères, dont 1 majuscule, 1 chiffre, 1 symbole"
+                placeholder="Ton mot de passe"
                 autoComplete="current-password"
                 disabled={loading}
                 value={pwd}
                 onChange={(e) => setPwd(e.target.value)}
                 id={passwordFieldId}
-                className="w-full rounded-3xl bg-white/70 text-poopay-text placeholder:text-poopay-mute/80 px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition mb-1"
+                className="w-full rounded-3xl bg-white/70 text-poopay-text placeholder:text-poopay-mute/80 px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition mb-5"
               />
-              <p className=" text-xs text-poopay-text/70 mb-5">
-                Minimum 12 caractères avec une majuscule, un chiffre et un
-                symbole (ex&nbsp;: ! ? % #).
-              </p>
             </div>
 
             {err && (
@@ -187,3 +177,4 @@ export default function Login() {
     </>
   );
 }
+
