@@ -34,7 +34,6 @@ export default function Login() {
       auth.login(data);
       navigate("/");
     } catch (e) {
-      console.log("Erreur lors de la connexion :", e);
       setErr(e.message || "Erreur de connexion");
     } finally {
       setLoading(false);

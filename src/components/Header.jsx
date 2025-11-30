@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import logo from "@/assets/logo/logoPoopay.png";
 import NotificationsModal from "./NotificationsModal.jsx";
@@ -25,7 +25,13 @@ export default function Header() {
 
           <div className="text-center">
             <h1 className="text-3xl text-center font-extrabold tracking-tight text-poopay-text">
-              POOPAY
+              <Link
+                to="/"
+                aria-label="Revenir à l'accueil"
+                className="inline-flex items-center justify-center px-2 py-1 rounded-md hover:text-poopay-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-poopay-pill"
+              >
+                POOPAY
+              </Link>
             </h1>
           </div>
 

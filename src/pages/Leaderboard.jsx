@@ -22,7 +22,6 @@ export default function Leaderboard() {
   const [topUsers, setTopUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  console.log(topUsers);
 
   // 1️⃣ Bootstrap : récupère dataUser et premier classement
   useEffect(() => {

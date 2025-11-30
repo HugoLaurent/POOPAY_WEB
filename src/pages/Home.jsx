@@ -90,7 +90,6 @@ export default function Home() {
   }, []);
 
   function StatRow({ title, sessions, earned, hours, id }) {
-    console.log(hours);
 
     return (
       <section

@@ -53,7 +53,6 @@ export default function Groups() {
         if (!cancelled) {
           setGroups(payload);
         }
-        console.log(payload);
       } catch (error) {
         console.error(error);
         if (!cancelled) setErr("Impossible de charger les groupes.");
