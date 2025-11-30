@@ -9,8 +9,7 @@ const sections = [
         Les présentes Conditions Générales de Vente (CGV) définissent les
         modalités et conditions de vente des services payants proposés par
         Poopay, ainsi que les droits et obligations des parties. Elles
-        complètent, si besoin, les Conditions Générales d’Utilisation et la
-        Politique de confidentialité.
+        complètent la Politique de confidentialité.
       </p>
     ),
   },
@@ -37,14 +36,15 @@ const sections = [
         <p>Poopay propose :</p>
         <ul className="list-disc pl-5 space-y-1">
           <li>
-            <strong>Offre gratuite :</strong> accès à l’application avec certaines
-            fonctionnalités limitées, notamment un nombre maximum de membres par
-            groupe.
+            <strong>Offre gratuite :</strong> accès à l’application avec
+            certaines fonctionnalités limitées, notamment un nombre maximum de
+            membres par groupe.
           </li>
           <li>
             <strong>Offre payante « Poopay Premium » :</strong> suppression ou
-            extension des limites de groupes, fonctionnalités avancées (statistiques
-            étendues, exports, options supplémentaires de gestion, etc.).
+            extension des limites de groupes, fonctionnalités avancées
+            (statistiques étendues, exports, options supplémentaires de gestion,
+            etc.).
           </li>
         </ul>
         <p>
@@ -59,8 +59,8 @@ const sections = [
     content: (
       <>
         <p>
-          Les prix des abonnements sont indiqués sur le Site en euros (€), toutes
-          taxes comprises ou, le cas échéant, avec la mention « TVA non
+          Les prix des abonnements sont indiqués sur le Site en euros (€),
+          toutes taxes comprises ou, le cas échéant, avec la mention « TVA non
           applicable, article 293 B du CGI ».
         </p>
         <p>
@@ -103,9 +103,7 @@ const sections = [
       <>
         <p>Selon l’offre choisie, l’abonnement :</p>
         <ul className="list-disc pl-5 space-y-1">
-          <li>
-            est mensuel ou annuel, renouvelé par tacite reconduction ; ou
-          </li>
+          <li>est mensuel ou annuel, renouvelé par tacite reconduction ; ou</li>
           <li>accorde un accès Premium pour une durée déterminée.</li>
         </ul>
         <p>
@@ -171,8 +169,8 @@ const sections = [
         </p>
         <ul className="list-disc pl-5 space-y-1">
           <li>
-            Poopay n’est pas un dispositif médical ni un outil officiel de
-            suivi du temps de travail ;
+            Poopay n’est pas un dispositif médical ni un outil officiel de suivi
+            du temps de travail ;
           </li>
           <li>
             les statistiques et estimations de « salaire » sont purement

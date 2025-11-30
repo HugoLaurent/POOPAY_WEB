@@ -121,6 +121,14 @@ export default function SignUp() {
         if (!data.username.trim()) {
           return setErr("Veuillez renseigner un nom d'utilisateur."), false;
         }
+
+        if (data.username.trim().length < 3) {
+          return (
+            setErr("Le nom d'utilisateur doit contenir au moins 3 caractères."),
+            false
+          );
+        }
+
         if (!data.departmentCode) {
           return setErr("Veuillez sélectionner un département."), false;
         }
@@ -416,7 +424,7 @@ export default function SignUp() {
                 </label>
                 <input
                   type="text"
-                  placeholder="TonPseudo"
+                  placeholder="TonPseudo (Trois caractères min.)"
                   disabled={isLoading}
                   value={data.username}
                   onChange={(e) => update("username", e.target.value)}
@@ -543,8 +551,8 @@ export default function SignUp() {
 
               <div className="bg-poopay-active/10 border border-poopay-active/30 rounded-2xl p-4 text-sm text-poopay-text">
                 💡 <span className="font-semibold">Astuce :</span> tu trouves
-                ces infos sur ta fiche de paie. 35h/sem ≈ 151h/mois. Exemple :
-                1 850€ net pour 151h.
+                ces infos sur ta fiche de paie. 35h/sem ≈ 151h/mois. Exemple : 1
+                850€ net pour 151h.
               </div>
             </div>
           )}
@@ -581,10 +589,9 @@ export default function SignUp() {
                   📋 Conditions d'utilisation
                 </h3>
                 <p className="text-sm text-poopay-text/80">
-                  En créant un compte, tu t'engages à fournir des infos
-                  exactes, à utiliser l'app de manière responsable et à
-                  respecter la vie privée des autres. Tes données sont traitées
-                  selon notre{" "}
+                  En créant un compte, tu t'engages à fournir des infos exactes,
+                  à utiliser l'app de manière responsable et à respecter la vie
+                  privée des autres. Tes données sont traitées selon notre{" "}
                   <button
                     type="button"
                     onClick={openPrivacyModal}
@@ -636,8 +643,8 @@ export default function SignUp() {
                         {" "}
                         {data.email}
                       </span>
-                      . Recopie le code à 6 chiffres ci-dessous pour valider
-                      ton inscription.
+                      . Recopie le code à 6 chiffres ci-dessous pour valider ton
+                      inscription.
                     </p>
                     <input
                       type="text"
@@ -650,7 +657,7 @@ export default function SignUp() {
                         )
                       }
                       disabled={isLoading}
-                    placeholder="Code reçu par email"
+                      placeholder="Code reçu par email"
                       className="w-full text-center tracking-[0.6rem] text-lg font-semibold rounded-2xl bg-poopay-active/10 text-poopay-text placeholder:text-poopay-mute px-4 py-3 outline-none ring-1 ring-poopay-pill focus:ring-2 focus:ring-poopay-active transition"
                     />
                     <div className="flex flex-wrap items-center gap-3 text-xs text-poopay-text/70">

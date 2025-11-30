@@ -4,7 +4,17 @@ import { DayPills, GoogleAd } from "@/components";
 import { HomeFetch } from "@/api";
 import { useAuthContext } from "@/context/AuthContext";
 
-const fmtH = (h) => `${h.toFixed(1)}h`;
+const fmtH = (h) => {
+  if (!Number.isFinite(h)) return "0h";
+  const totalSeconds = Math.max(0, Math.round(h * 3600));
+  if (totalSeconds < 3600) {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    if (minutes === 0) return `${seconds}s`;
+    return `${minutes} min ${seconds.toString().padStart(2, "0")}s`;
+  }
+  return `${h.toFixed(1)}h`;
+};
 const euro = (n) =>
   new Intl.NumberFormat("fr-FR", {
     style: "currency",
@@ -80,6 +90,8 @@ export default function Home() {
   }, []);
 
   function StatRow({ title, sessions, earned, hours, id }) {
+    console.log(hours);
+
     return (
       <section
         id={id}

@@ -23,7 +23,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="my-12 max-w-3xl mx-auto w-full">
+    <footer className="my-12 max-w-3xl mx-auto w-full pb-12">
       <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-20 rounded-t-2xl bg-poopay-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-poopay-card/80 shadow-[0_-8px_24px_rgba(124,84,56,0.12)]">
         {primaryTab && (
           <div className="absolute left-1/2 top-0 -translate-x-1/2">
