@@ -365,7 +365,7 @@ export default function Settings() {
                     href="mailto:privacy@poopay.app?subject=Demande%20DPO"
                     className="text-poopay-text/90 transition hover:text-poopay-text hover:underline"
                   >
-                    DPO
+                    Me contacter
                   </a>
                 </div>
               </li>

@@ -23,7 +23,10 @@ export default function LegalLinks({ className = "" }) {
       )}
     >
       <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-        <Link to="/mentions-legales" className="underline hover:text-poopay-text">
+        <Link
+          to="/mentions-legales"
+          className="underline hover:text-poopay-text"
+        >
           Mentions légales
         </Link>
         <Link
@@ -48,7 +51,7 @@ export default function LegalLinks({ className = "" }) {
           href="mailto:privacy@poopay.app?subject=Demande%20DPO"
           className="underline text-poopay-mute hover:text-poopay-text transition"
         >
-          DPO
+          Me contacter
         </a>
       </div>
     </div>
